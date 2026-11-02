@@ -117,15 +117,7 @@
           <span>অ্যাপ ইনস্টল</span>
         </button>
 
-        <button
-          id="toggleFontBtn"
-          type="button"
-          class="bg-emerald-800/90 hover:bg-emerald-700 active:scale-95 text-amber-300 border border-emerald-600/80 px-2.5 sm:px-3.5 py-2 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-1 transition shadow-xs"
-          title="বড় বা সাধারণ লেখার আকার"
-        >
-          <span>🔍</span>
-          <span id="fontBtnLabel">বড় লেখা</span>
-        </button>
+
       </div>
     </div>
   </header>
@@ -364,7 +356,7 @@
         </div>
 
         <!-- 3. Address Details: Plot/House No, Road No, Block/Sector, Mouza/Dag -->
-        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-3">
+        <div id="addressSectionBlock" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-3">
           <div class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
             <span>📍</span>
             <span id="addressSectionTitle">জমি / বাড়ির ঠিকানা ও পরিমাপ</span>
@@ -454,7 +446,7 @@
         </div>
 
         <!-- 5. Photo, Video, PDF & Word File Attachments inside Form -->
-        <div class="bg-sky-50/80 p-3.5 rounded-2xl border border-sky-200 space-y-3">
+        <div id="attachmentsSectionBlock" class="bg-sky-50/80 p-3.5 rounded-2xl border border-sky-200 space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="text-xs font-bold uppercase tracking-wider text-sky-950 flex items-center gap-1.5">
               <span>📎</span>
@@ -1144,9 +1136,9 @@
       function loadRecords() {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
-          if (raw) {
+          if (raw !== null) {
             const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed) && parsed.length > 0) {
+            if (Array.isArray(parsed)) {
               records = parsed.map(r => ({
                 ...r,
                 attachments: Array.isArray(r.attachments) ? r.attachments : [],
@@ -1195,28 +1187,11 @@
         }, 2800);
       }
 
-      // Font Mode Setup
+      // Always Normal View (clear any previously saved large-text-mode)
       function initFontMode() {
+        document.body.classList.remove('large-text-mode');
         try {
-          const savedLarge = localStorage.getItem(FONT_MODE_KEY);
-          const isLarge = savedLarge === null ? false : savedLarge === '1';
-          applyFontMode(isLarge);
-        } catch (e) {
-          applyFontMode(false);
-        }
-      }
-
-      function applyFontMode(isLarge) {
-        const label = document.getElementById('fontBtnLabel');
-        if (isLarge) {
-          document.body.classList.add('large-text-mode');
-          label.textContent = 'বড় লেখা: চালু';
-        } else {
-          document.body.classList.remove('large-text-mode');
-          label.textContent = 'বড় লেখা';
-        }
-        try {
-          localStorage.setItem(FONT_MODE_KEY, isLarge ? '1' : '0');
+          localStorage.removeItem(FONT_MODE_KEY);
         } catch (e) {}
       }
 
@@ -1232,6 +1207,9 @@
         const sellerBtn = document.getElementById('formRoleSellerBtn');
         const buyerBtn = document.getElementById('formRoleBuyerBtn');
 
+        const addressBlock = document.getElementById('addressSectionBlock');
+        const attachmentsBlock = document.getElementById('attachmentsSectionBlock');
+
         if (role === 'seller') {
           headerBar.className = 'bg-emerald-800 text-white px-4 sm:px-6 py-3.5 sm:py-4 flex items-center justify-between shrink-0';
           roleBadge.textContent = '🏡 বিক্রির প্রপার্টি (Seller / মালিক)';
@@ -1244,6 +1222,13 @@
           document.getElementById('priceRateLabel').textContent = 'মালিকের রেট (প্রতি কাঠা/শেয়ার/sft)';
           document.getElementById('totalPriceLabel').innerHTML = 'মোট চাওয়া দাম <span class="text-red-500">*</span>';
           document.getElementById('addressSectionTitle').textContent = `${cat}-এর ঠিকানা ও বিবরণ`;
+          document.getElementById('propTitleLabel').textContent = 'সংক্ষিপ্ত শিরোনাম (চেনার সুবিধার্থে)';
+          document.getElementById('propTitle').placeholder = 'যেমন: ৫ কাঠা দক্ষিণমুখী প্লট / কর্নার বাড়ি...';
+          document.getElementById('propNotesLabel').textContent = 'বিস্তারিত নোট / শর্তাবলী (খাতার নোট)';
+          document.getElementById('propNotes').placeholder = 'জমির বিশেষ কোনো তথ্য, কাগজপত্র বা ভিজিটের সময় এখানে লিখে রাখুন...';
+
+          if (addressBlock) addressBlock.classList.remove('hidden');
+          if (attachmentsBlock) attachmentsBlock.classList.remove('hidden');
         } else {
           headerBar.className = 'bg-amber-700 text-white px-4 sm:px-6 py-3.5 sm:py-4 flex items-center justify-between shrink-0';
           roleBadge.textContent = '🤝 ক্রেতার চাহিদা (Buyer / বায়ার)';
@@ -1255,7 +1240,13 @@
           document.getElementById('personNameLabel').innerHTML = 'ক্রেতার নাম <span class="text-red-500">*</span>';
           document.getElementById('priceRateLabel').textContent = 'ক্রেতার রেট রেঞ্জ (যদি থাকে)';
           document.getElementById('totalPriceLabel').innerHTML = 'ক্রেতার বাজেট (Budget) <span class="text-red-500">*</span>';
-          document.getElementById('addressSectionTitle').textContent = `ক্রেতা কেমন ${cat} চাচ্ছেন তার বিবরণ`;
+          document.getElementById('propTitleLabel').textContent = 'ক্রেতার মূল চাহিদা (সংক্ষেপে)';
+          document.getElementById('propTitle').placeholder = 'যেমন: ৪-৬ কাঠা প্লট বা ১৫০০ বর্গফুট ফ্ল্যাট প্রয়োজন...';
+          document.getElementById('propNotesLabel').textContent = 'ক্রেতার অন্যান্য রিকোয়ারমেন্ট / নোট';
+          document.getElementById('propNotes').placeholder = 'ক্রেতার বিশেষ কোনো শর্ত বা চাহিদা থাকলে এখানে লিখে রাখুন...';
+
+          if (addressBlock) addressBlock.classList.add('hidden');
+          if (attachmentsBlock) attachmentsBlock.classList.add('hidden');
         }
 
         const plotLabel = document.getElementById('plotLabel');
@@ -1518,28 +1509,30 @@
                     </h3>
                   </div>
 
-                  <!-- Key Plot / Road / Block / Size 2x2 Grid -->
-                  <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 sm:p-3 rounded-xl border border-slate-200/80 text-xs">
-                    <div class="min-w-0">
-                      <span class="text-slate-500 block text-[11px]">প্লট / বাড়ি নং:</span>
-                      <span class="font-bold text-slate-800 block truncate">${esc(r.plotOrHouseNo || 'উল্লেখ নেই')}</span>
+                  <!-- Key Plot / Road / Block / Size 2x2 Grid (Only for Seller Properties) -->
+                  ${isSeller ? `
+                    <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 sm:p-3 rounded-xl border border-slate-200/80 text-xs">
+                      <div class="min-w-0">
+                        <span class="text-slate-500 block text-[11px]">প্লট / বাড়ি নং:</span>
+                        <span class="font-bold text-slate-800 block truncate">${esc(r.plotOrHouseNo || 'উল্লেখ নেই')}</span>
+                      </div>
+                      <div class="min-w-0">
+                        <span class="text-slate-500 block text-[11px]">রোড নং:</span>
+                        <span class="font-bold text-slate-800 block truncate">${esc(r.roadNo || 'উল্লেখ নেই')}</span>
+                      </div>
+                      <div class="min-w-0">
+                        <span class="text-slate-500 block text-[11px]">ব্লক / সেক্টর:</span>
+                        <span class="font-bold text-slate-800 block truncate">${esc(r.blockOrSector || 'উল্লেখ নেই')}</span>
+                      </div>
+                      <div class="min-w-0">
+                        <span class="text-slate-500 block text-[11px]">পরিমাণ / সাইজ:</span>
+                        <span class="font-bold text-emerald-900 block truncate">${esc(r.propSize || 'উল্লেখ নেই')}</span>
+                      </div>
                     </div>
-                    <div class="min-w-0">
-                      <span class="text-slate-500 block text-[11px]">রোড নং:</span>
-                      <span class="font-bold text-slate-800 block truncate">${esc(r.roadNo || 'উল্লেখ নেই')}</span>
-                    </div>
-                    <div class="min-w-0">
-                      <span class="text-slate-500 block text-[11px]">ব্লক / সেক্টর:</span>
-                      <span class="font-bold text-slate-800 block truncate">${esc(r.blockOrSector || 'উল্লেখ নেই')}</span>
-                    </div>
-                    <div class="min-w-0">
-                      <span class="text-slate-500 block text-[11px]">পরিমাণ / সাইজ:</span>
-                      <span class="font-bold text-emerald-900 block truncate">${esc(r.propSize || 'উল্লেখ নেই')}</span>
-                    </div>
-                  </div>
+                  ` : ''}
 
-                  <!-- Extra Specifications -->
-                  ${(r.extraSpec1 || r.extraSpec2 || r.extraSpec3) ? `
+                  <!-- Extra Specifications (Only for Seller Properties) -->
+                  ${(isSeller && (r.extraSpec1 || r.extraSpec2 || r.extraSpec3)) ? `
                     <div class="flex flex-wrap gap-1.5 text-[11px] sm:text-xs">
                       ${r.extraSpec1 ? `<span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200/90">📄 ${esc(r.extraSpec1)}</span>` : ''}
                       ${r.extraSpec2 ? `<span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200/90">🧭 ${esc(r.extraSpec2)}</span>` : ''}
@@ -1587,8 +1580,8 @@
                     ` : ''}
                   </div>
 
-                  <!-- Attached Photos, Videos, PDFs & Word Files Gallery Strip -->
-                  ${renderCardAttachmentsStrip(r)}
+                  <!-- Attached Photos, Videos, PDFs & Word Files Gallery Strip (Only for Seller) -->
+                  ${isSeller ? renderCardAttachmentsStrip(r) : ''}
 
                   <!-- Broker Notes -->
                   ${r.notes ? `
@@ -1610,15 +1603,17 @@
               <!-- Card Footer Action Bar (Mobile Responsive) -->
               <div class="px-3.5 sm:px-4 py-2.5 bg-slate-50 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-1.5 no-print">
                 <div class="flex items-center gap-1.5 flex-wrap">
-                  <button
-                    type="button"
-                    data-media-id="${r.id}"
-                    class="open-media-btn bg-sky-50 hover:bg-sky-100 active:scale-95 text-sky-900 border border-sky-300 font-bold px-2.5 py-1.5 rounded-xl text-xs transition flex items-center gap-1"
-                    title="ছবি, ভিডিও, পিডিএফ বা ওয়ার্ড ফাইল যোগ করুন"
-                  >
-                    <span>📎</span>
-                    <span>ছবি/ফাইল (${toBanglaNumber(attCount)})</span>
-                  </button>
+                  ${isSeller ? `
+                    <button
+                      type="button"
+                      data-media-id="${r.id}"
+                      class="open-media-btn bg-sky-50 hover:bg-sky-100 active:scale-95 text-sky-900 border border-sky-300 font-bold px-2.5 py-1.5 rounded-xl text-xs transition flex items-center gap-1"
+                      title="ছবি, ভিডিও, পিডিএফ বা ওয়ার্ড ফাইল যোগ করুন"
+                    >
+                      <span>📎</span>
+                      <span>ছবি/ফাইল (${toBanglaNumber(attCount)})</span>
+                    </button>
+                  ` : ''}
 
                   <button
                     type="button"
@@ -2040,12 +2035,7 @@
           showToast('ইনস্টল বাটনটি সরিয়ে দেওয়া হয়েছে!', '✅');
         });
 
-        // Toggle Font Mode
-        document.getElementById('toggleFontBtn').addEventListener('click', () => {
-          const currentlyLarge = document.body.classList.contains('large-text-mode');
-          applyFontMode(!currentlyLarge);
-          showToast(!currentlyLarge ? 'বড় লেখার মোড চালু হয়েছে' : 'সাধারণ লেখার মোড চালু হয়েছে', '🔍');
-        });
+
 
         // Big Top Add Buttons
         document.getElementById('addSellerPropBtn').addEventListener('click', () => openEntryModal('seller'));
