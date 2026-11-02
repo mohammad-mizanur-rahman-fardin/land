@@ -87,6 +87,100 @@
 </head>
 <body class="min-h-screen flex flex-col selection:bg-emerald-200 selection:text-emerald-950">
 
+  <!-- MANDATORY GMAIL SIGN-IN GATE SCREEN -->
+  <div id="authGateScreen" class="fixed inset-0 z-50 bg-gradient-to-br from-emerald-950 via-slate-900 to-emerald-950 flex items-center justify-center p-4 overflow-y-auto no-print">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200/90 space-y-5 my-auto">
+      <!-- Brand Header -->
+      <div class="text-center space-y-2">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-600 text-amber-400 flex items-center justify-center text-3xl mx-auto shadow-lg border-2 border-amber-400/40">
+          🏠
+        </div>
+        <h1 class="text-xl sm:text-2xl font-bold text-slate-900">জমির হিসাব ও ব্রোকার খাতা</h1>
+        <p class="text-xs sm:text-sm text-slate-500">নিরাপদ ব্যক্তিগত প্রপার্টি ও ক্লায়েন্ট নোটবুক</p>
+      </div>
+
+      <!-- Security Notice Banner -->
+      <div class="bg-emerald-50 border border-emerald-200/80 rounded-2xl p-3.5 flex items-start gap-2.5 text-xs text-emerald-950">
+        <span class="text-base shrink-0 mt-0.5">🔒</span>
+        <div class="leading-relaxed">
+          <strong>নিরাপত্তা সুরক্ষা চালু আছে:</strong> আপনার খাতার তথ্য সুরক্ষিত রাখতে আপনার <strong>Gmail অ্যাকাউন্ট</strong> ও পাসওয়ার্ড/পিন দিয়ে সাইন-ইন করুন।
+        </div>
+      </div>
+
+      <!-- Saved Gmail Quick Select (if user signed in before on this device) -->
+      <div id="savedAccountsBox" class="hidden space-y-2">
+        <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">পূর্বে ব্যবহৃত Gmail অ্যাকাউন্ট:</div>
+        <div id="savedAccountsList" class="space-y-1.5"></div>
+      </div>
+
+      <!-- Official Google-Style Sign In Form -->
+      <form id="gmailLoginForm" class="space-y-4">
+        <div>
+          <label for="authUserName" class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">আপনার নাম</label>
+          <input
+            id="authUserName"
+            type="text"
+            placeholder="যেমন: মো: করিম উদ্দিন"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none text-sm text-slate-900"
+          />
+        </div>
+
+        <div>
+          <label for="authGmailInput" class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">Gmail অ্যাড্রেস <span class="text-red-500">*</span></label>
+          <div class="relative">
+            <input
+              id="authGmailInput"
+              type="email"
+              required
+              placeholder="yourname@gmail.com"
+              class="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none text-sm text-slate-900 font-medium"
+            />
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm">✉️</span>
+          </div>
+        </div>
+
+        <div>
+          <label for="authPinInput" class="block text-xs sm:text-sm font-bold text-slate-700 mb-1">সিকিউরিটি পাসওয়ার্ড / পিন কোড <span class="text-red-500">*</span></label>
+          <div class="relative">
+            <input
+              id="authPinInput"
+              type="password"
+              required
+              minlength="4"
+              placeholder="কমপক্ষে ৪ সংখ্যার পিন বা পাসওয়ার্ড দিন"
+              class="w-full pl-10 pr-16 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none text-sm text-slate-900"
+            />
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm">🔑</span>
+            <button type="button" id="togglePinVisibilityBtn" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-500 hover:text-slate-800 px-2 py-1 rounded">
+              দেখুন
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-1">প্রথমবার যে পিন/পাসওয়ার্ড দিবেন, পরবর্তীতে এই Gmail-এ ঢুকতে সেই পিনটিই লাগবে।</p>
+        </div>
+
+        <div id="authErrorMsg" class="hidden bg-red-50 border border-red-200 text-red-700 text-xs font-bold px-3.5 py-2.5 rounded-xl"></div>
+
+        <!-- Google Branded Sign-In Submit Button -->
+        <button
+          type="submit"
+          class="w-full bg-white hover:bg-slate-50 active:scale-[0.99] text-slate-800 border-2 border-slate-300 hover:border-emerald-600 font-bold py-3 px-4 rounded-2xl shadow-sm hover:shadow transition flex items-center justify-center gap-3 text-sm sm:text-base"
+        >
+          <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/>
+            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/>
+            <path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 11.2 0 13.5s.6 4.5 1.6 6.5l3.7-2.9z"/>
+            <path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/>
+          </svg>
+          <span>Sign in with Gmail</span>
+        </button>
+      </form>
+
+      <div class="text-center text-[11px] text-slate-400 border-t border-slate-100 pt-3">
+        আপনার সকল তথ্য আপনার Gmail অ্যাকাউন্টের অধীনে সুরক্ষিত থাকবে।
+      </div>
+    </div>
+  </div>
+
   <!-- Top App Bar (Mobile PWA Header) -->
   <header class="bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-white shadow-md sticky top-0 z-30 no-print border-b border-emerald-800/80">
     <div class="max-w-6xl mx-auto px-3 sm:px-5 py-2.5 sm:py-3 flex items-center justify-between gap-2">
@@ -105,19 +199,32 @@
         </div>
       </div>
 
-      <!-- Quick Controls: Install PWA Button (Auto-removed when installed) + Font Size Button -->
+      <!-- Quick Controls: Signed-In User Pill + Install PWA Button + Logout Button -->
       <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <div id="headerUserBadge" class="hidden sm:flex items-center gap-1.5 bg-emerald-950/60 border border-emerald-700/80 px-2.5 py-1.5 rounded-xl text-xs text-emerald-100 max-w-[180px]" title="বর্তমান লগইন করা Gmail">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+          <span id="headerUserEmail" class="truncate font-semibold"></span>
+        </div>
+
         <button
           id="installPwaBtn"
           type="button"
-          class="bg-amber-400 hover:bg-amber-300 active:scale-95 text-emerald-950 px-3 sm:px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition shadow-sm border border-amber-300"
+          class="bg-amber-400 hover:bg-amber-300 active:scale-95 text-emerald-950 px-2.5 sm:px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1 transition shadow-sm border border-amber-300"
           title="মোবাইলে অ্যাপ হিসেবে ইনস্টল করুন"
         >
           <span>📲</span>
           <span>অ্যাপ ইনস্টল</span>
         </button>
 
-
+        <button
+          id="logoutBtn"
+          type="button"
+          class="bg-emerald-800/90 hover:bg-red-700 active:scale-95 text-white border border-emerald-600/80 hover:border-red-500 px-2.5 sm:px-3 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1 transition shadow-xs"
+          title="খাতা লক ও লগআউট করুন"
+        >
+          <span>🔒</span>
+          <span>লগআউট</span>
+        </button>
       </div>
     </div>
   </header>
@@ -657,11 +764,22 @@
 
   <script>
     (function () {
-      const STORAGE_KEY = 'bd_land_broker_khata_v1';
+      const BASE_STORAGE_KEY = 'bd_land_broker_khata_v1';
+      const AUTH_ACCOUNTS_KEY = 'bd_land_broker_gmail_accounts_v1';
+      const AUTH_SESSION_KEY = 'bd_land_broker_active_session_v1';
       const FONT_MODE_KEY = 'bd_land_broker_large_font';
       const PWA_INSTALLED_KEY = 'bd_land_broker_pwa_installed';
       const IDB_NAME = 'bd_land_broker_media_db';
       const IDB_STORE = 'attachments';
+
+      let currentUser = null; // { email, name }
+
+      function getActiveStorageKey() {
+        if (currentUser && currentUser.email) {
+          return BASE_STORAGE_KEY + '__' + currentUser.email.toLowerCase();
+        }
+        return BASE_STORAGE_KEY;
+      }
 
       const fileDataCache = {};
       let deferredInstallPrompt = null;
@@ -1135,7 +1253,7 @@
       // Storage Helpers
       function loadRecords() {
         try {
-          const raw = localStorage.getItem(STORAGE_KEY);
+          const raw = localStorage.getItem(getActiveStorageKey());
           if (raw !== null) {
             const parsed = JSON.parse(raw);
             if (Array.isArray(parsed)) {
@@ -1170,7 +1288,7 @@
 
       function saveRecords() {
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+          localStorage.setItem(getActiveStorageKey(), JSON.stringify(records));
         } catch (e) {
           console.warn('localStorage save fallback', e);
         }
@@ -2400,13 +2518,209 @@
         });
       }
 
+      // ==========================================
+      // GMAIL AUTHENTICATION & SECURITY GATE
+      // ==========================================
+      function loadSavedAccounts() {
+        try {
+          const raw = localStorage.getItem(AUTH_ACCOUNTS_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) return parsed;
+          }
+        } catch (e) {}
+        return [];
+      }
+
+      function saveAccountsList(list) {
+        try {
+          localStorage.setItem(AUTH_ACCOUNTS_KEY, JSON.stringify(list));
+        } catch (e) {}
+      }
+
+      function renderSavedAccountsChips() {
+        const accounts = loadSavedAccounts();
+        const box = document.getElementById('savedAccountsBox');
+        const listEl = document.getElementById('savedAccountsList');
+        if (!box || !listEl) return;
+
+        if (accounts.length === 0) {
+          box.classList.add('hidden');
+          return;
+        }
+        box.classList.remove('hidden');
+        listEl.innerHTML = accounts.map(acc => `
+          <button
+            type="button"
+            data-pick-email="${esc(acc.email)}"
+            data-pick-name="${esc(acc.name || '')}"
+            class="pick-saved-acc-btn w-full bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl px-3 py-2 flex items-center justify-between text-left transition"
+          >
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-8 h-8 rounded-full bg-emerald-800 text-amber-300 font-bold text-xs flex items-center justify-center shrink-0">
+                ${esc((acc.name || acc.email || 'G').slice(0, 1).toUpperCase())}
+              </div>
+              <div class="min-w-0">
+                <div class="text-xs font-bold text-slate-800 truncate">${esc(acc.name || 'ব্রোকার অ্যাকাউন্ট')}</div>
+                <div class="text-[11px] text-slate-500 truncate">${esc(acc.email)}</div>
+              </div>
+            </div>
+            <span class="text-[11px] font-bold text-emerald-700 shrink-0">সিলেক্ট →</span>
+          </button>
+        `).join('');
+      }
+
+      function showAuthError(msg) {
+        const errEl = document.getElementById('authErrorMsg');
+        if (!errEl) return;
+        if (!msg) {
+          errEl.classList.add('hidden');
+          errEl.textContent = '';
+        } else {
+          errEl.textContent = '⚠️ ' + msg;
+          errEl.classList.remove('hidden');
+        }
+      }
+
+      function unlockAppWithUser(userObj) {
+        currentUser = userObj;
+        try {
+          sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(userObj));
+        } catch (e) {}
+
+        const gate = document.getElementById('authGateScreen');
+        if (gate) gate.classList.add('hidden');
+
+        const emailSpan = document.getElementById('headerUserEmail');
+        if (emailSpan) emailSpan.textContent = userObj.email;
+
+        // Migrate any legacy pre-auth data to the first signed-in Gmail if their key is empty
+        try {
+          const userKey = getActiveStorageKey();
+          if (localStorage.getItem(userKey) === null && localStorage.getItem(BASE_STORAGE_KEY) !== null) {
+            localStorage.setItem(userKey, localStorage.getItem(BASE_STORAGE_KEY));
+          }
+        } catch (e) {}
+
+        loadRecords();
+        renderRecords();
+      }
+
+      function lockAndLogoutApp() {
+        currentUser = null;
+        try {
+          sessionStorage.removeItem(AUTH_SESSION_KEY);
+        } catch (e) {}
+        const pinInput = document.getElementById('authPinInput');
+        if (pinInput) pinInput.value = '';
+        showAuthError('');
+        renderSavedAccountsChips();
+        const gate = document.getElementById('authGateScreen');
+        if (gate) gate.classList.remove('hidden');
+        showToast('খাতা নিরাপদে লক করা হয়েছে', '🔒');
+      }
+
+      function bindAuthEvents() {
+        renderSavedAccountsChips();
+
+        // Toggle password/PIN visibility
+        const togglePinBtn = document.getElementById('togglePinVisibilityBtn');
+        const pinInput = document.getElementById('authPinInput');
+        if (togglePinBtn && pinInput) {
+          togglePinBtn.addEventListener('click', () => {
+            const isPass = pinInput.type === 'password';
+            pinInput.type = isPass ? 'text' : 'password';
+            togglePinBtn.textContent = isPass ? 'লুকান' : 'দেখুন';
+          });
+        }
+
+        // Click on a saved Gmail account chip
+        const savedList = document.getElementById('savedAccountsList');
+        if (savedList) {
+          savedList.addEventListener('click', (e) => {
+            const btn = e.target.closest('.pick-saved-acc-btn');
+            if (!btn) return;
+            document.getElementById('authGmailInput').value = btn.getAttribute('data-pick-email') || '';
+            document.getElementById('authUserName').value = btn.getAttribute('data-pick-name') || '';
+            document.getElementById('authPinInput').focus();
+            showAuthError('');
+          });
+        }
+
+        // Submit Gmail Login Form
+        const loginForm = document.getElementById('gmailLoginForm');
+        if (loginForm) {
+          loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showAuthError('');
+            const nameVal = document.getElementById('authUserName').value.trim();
+            const emailVal = document.getElementById('authGmailInput').value.trim().toLowerCase();
+            const pinVal = document.getElementById('authPinInput').value;
+
+            if (!emailVal.endsWith('@gmail.com') && !emailVal.endsWith('@googlemail.com')) {
+              showAuthError('অনুগ্রহ করে একটি সঠিক Gmail অ্যাড্রেস (@gmail.com) দিন।');
+              return;
+            }
+            if (!pinVal || pinVal.length < 4) {
+              showAuthError('নিরাপত্তার জন্য কমপক্ষে ৪ অক্ষরের পিন বা পাসওয়ার্ড দিন।');
+              return;
+            }
+
+            const accounts = loadSavedAccounts();
+            const existingAcc = accounts.find(a => a.email.toLowerCase() === emailVal);
+
+            if (existingAcc) {
+              if (existingAcc.pin !== pinVal) {
+                showAuthError('ভুল পাসওয়ার্ড বা পিন কোড! সঠিক পিন দিয়ে আবার চেষ্টা করুন।');
+                return;
+              }
+              if (nameVal) existingAcc.name = nameVal;
+              saveAccountsList(accounts);
+              unlockAppWithUser({ email: existingAcc.email, name: existingAcc.name || emailVal.split('@')[0] });
+              showToast(`স্বাগতম, ${existingAcc.name || emailVal}!`, '✅');
+            } else {
+              const newAcc = {
+                email: emailVal,
+                name: nameVal || emailVal.split('@')[0],
+                pin: pinVal
+              };
+              accounts.unshift(newAcc);
+              saveAccountsList(accounts);
+              unlockAppWithUser({ email: newAcc.email, name: newAcc.name });
+              showToast('Gmail অ্যাকাউন্টের সাথে খাতা যুক্ত ও আনলক হয়েছে!', '🔒');
+            }
+          });
+        }
+
+        // Logout / Lock Button
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', lockAndLogoutApp);
+        }
+      }
+
       // Initialize App
       async function bootstrap() {
         setupPwaEnvironment();
         initFontMode();
         await loadAllBlobsIntoCache();
-        loadRecords();
         bindEvents();
+        bindAuthEvents();
+
+        // Check if active tab session is already authenticated
+        try {
+          const activeSession = sessionStorage.getItem(AUTH_SESSION_KEY);
+          if (activeSession) {
+            const parsedUser = JSON.parse(activeSession);
+            if (parsedUser && parsedUser.email) {
+              unlockAppWithUser(parsedUser);
+              return;
+            }
+          }
+        } catch (e) {}
+
+        // Otherwise keep #authGateScreen visible (Mandatory Sign-In before opening app)
+        loadRecords();
         renderRecords();
       }
       bootstrap();
