@@ -1,0 +1,2181 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>জমির হিসাব ও ব্রোকার খাতা - প্রপার্টি নোটবুক</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Hind Siliguri', 'Inter', sans-serif;
+      background-color: #f4f6f3;
+      color: #1e293b;
+    }
+    /* Uncle-friendly Large Text Mode */
+    body.large-text-mode {
+      font-size: 19px;
+    }
+    body.large-text-mode .card-title {
+      font-size: 1.45rem !important;
+      line-height: 1.9rem !important;
+    }
+    body.large-text-mode .card-body-text {
+      font-size: 1.15rem !important;
+      line-height: 1.7rem !important;
+    }
+    body.large-text-mode .btn-touch {
+      padding-top: 0.85rem !important;
+      padding-bottom: 0.85rem !important;
+      font-size: 1.15rem !important;
+    }
+    body.large-text-mode input,
+    body.large-text-mode select,
+    body.large-text-mode textarea {
+      font-size: 1.15rem !important;
+      padding: 0.85rem !important;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background: #fff !important;
+      }
+      .print-card {
+        break-inside: avoid;
+        border: 1px solid #94a3b8 !important;
+        box-shadow: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-emerald-200 selection:text-emerald-950">
+
+  <!-- Top Header -->
+  <header class="bg-emerald-900 text-white shadow-md sticky top-0 z-30 no-print">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-amber-400 text-emerald-950 flex items-center justify-center font-bold text-2xl shadow-inner shrink-0">
+          🏠
+        </div>
+        <div>
+          <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            <span>জমির হিসাব ও ব্রোকার খাতা</span>
+          </h1>
+          <p class="text-xs sm:text-sm text-emerald-200">জমি • বাড়ি • ফ্ল্যাট • ল্যান্ড শেয়ার • ছবি, ভিডিও ও দলিল সংরক্ষণ</p>
+        </div>
+      </div>
+
+      <!-- Quick Controls -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <button id="toggleFontBtn" type="button" class="bg-emerald-800 hover:bg-emerald-700 active:bg-emerald-950 text-amber-300 border border-emerald-600 px-3.5 py-2 rounded-xl font-semibold text-sm flex items-center gap-1.5 transition shadow-sm" title="বড় বা সাধারণ লেখার আকার">
+          <span>🔍</span>
+          <span id="fontBtnLabel">বড় লেখা</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-5">
+
+    <!-- Big Action Buttons (Primary Entry Point for Uncle) -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 no-print">
+      <button id="addSellerPropBtn" type="button" class="btn-touch group bg-gradient-to-r from-emerald-700 to-emerald-600 hover:from-emerald-800 hover:to-emerald-700 text-white p-4 sm:p-5 rounded-2xl shadow-md hover:shadow-lg transition flex items-center justify-between border-2 border-emerald-500/40 text-left">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/15 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
+            🏡
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-wider text-emerald-200 font-semibold">বিক্রির জন্য (Seller / মালিক)</div>
+            <div class="text-lg sm:text-xl font-bold mt-0.5">+ নতুন প্রপার্টি / জমি যোগ করুন</div>
+            <div class="text-xs sm:text-sm text-emerald-100 mt-0.5">প্লট, বাড়ি, ফ্ল্যাট, মালিকের রেট + ছবি, ভিডিও ও দলিল ফাইল</div>
+          </div>
+        </div>
+        <span class="bg-amber-400 text-emerald-950 font-bold px-3 py-1.5 rounded-xl text-sm shrink-0 group-hover:scale-105 transition">যোগ +</span>
+      </button>
+
+      <button id="addBuyerReqBtn" type="button" class="btn-touch group bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white p-4 sm:p-5 rounded-2xl shadow-md hover:shadow-lg transition flex items-center justify-between border-2 border-amber-400/40 text-left">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/15 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
+            🤝
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-wider text-amber-100 font-semibold">কেনার জন্য (Buyer / ক্রেতা)</div>
+            <div class="text-lg sm:text-xl font-bold mt-0.5">+ নতুন ক্রেতার চাহিদা যোগ করুন</div>
+            <div class="text-xs sm:text-sm text-amber-100 mt-0.5">ক্রেতার নাম, বাজেট, পছন্দের এলাকা ও রিকোয়ারমেন্ট ফাইল</div>
+          </div>
+        </div>
+        <span class="bg-white text-amber-900 font-bold px-3 py-1.5 rounded-xl text-sm shrink-0 group-hover:scale-105 transition">যোগ +</span>
+      </button>
+    </section>
+
+    <!-- Status Summary Strip (Clickable Quick Filters) -->
+    <section class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 no-print" id="statsBar">
+      <!-- Populated dynamically via JS -->
+    </section>
+
+    <!-- Simple Filter & Search Bar -->
+    <section class="bg-white rounded-2xl p-3.5 sm:p-4 shadow-sm border border-slate-200 space-y-3 no-print">
+      <!-- Role Tabs (All / Seller Property / Buyer Requirement) -->
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+        <div class="flex flex-wrap gap-1.5" id="recordTypeTabs">
+          <button type="button" data-role="all" class="role-tab btn-touch px-3.5 py-2 rounded-xl font-bold text-sm transition bg-emerald-900 text-white shadow-sm">
+            📋 সব হিসাব (<span id="countRoleAll">0</span>)
+          </button>
+          <button type="button" data-role="seller" class="role-tab btn-touch px-3.5 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+            🏡 বিক্রির প্রপার্টি / মালিক (<span id="countRoleSeller">0</span>)
+          </button>
+          <button type="button" data-role="buyer" class="role-tab btn-touch px-3.5 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+            🤝 ক্রেতার চাহিদা / বায়ার (<span id="countRoleBuyer">0</span>)
+          </button>
+        </div>
+
+        <!-- Reset Filter button -->
+        <button id="resetFiltersBtn" type="button" class="text-xs sm:text-sm font-semibold text-emerald-700 hover:text-emerald-900 underline px-2 py-1 hidden">
+          সব ফিল্টার মুছুন
+        </button>
+      </div>
+
+      <!-- Category Pills (জমি, বাড়ি, ফ্ল্যাট, ল্যান্ড শেয়ার) -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 custom-scroll" id="categoryPills">
+        <span class="text-xs font-semibold text-slate-500 mr-1 shrink-0">ধরন:</span>
+        <button type="button" data-cat="all" class="cat-pill px-3 py-1.5 rounded-xl text-sm font-bold transition bg-amber-500 text-slate-950 shrink-0">
+          সব ধরন
+        </button>
+        <button type="button" data-cat="জমি" class="cat-pill px-3 py-1.5 rounded-xl text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0">
+          🌱 জমি / প্লট
+        </button>
+        <button type="button" data-cat="বাড়ি" class="cat-pill px-3 py-1.5 rounded-xl text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0">
+          🏠 বাড়ি / ভবন
+        </button>
+        <button type="button" data-cat="ফ্ল্যাট" class="cat-pill px-3 py-1.5 rounded-xl text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0">
+          🏢 ফ্ল্যাট
+        </button>
+        <button type="button" data-cat="ল্যান্ড শেয়ার" class="cat-pill px-3 py-1.5 rounded-xl text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0">
+          🏗️ ল্যান্ড শেয়ার
+        </button>
+      </div>
+
+      <!-- Search Input & Status Select -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+        <div class="sm:col-span-2 relative">
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="🔍 এলাকা, রোড নং, প্লট/বাড়ি নং, মালিক বা ক্রেতার নাম, মোবাইল দিয়ে খুঁজুন..."
+            class="w-full pl-3.5 pr-9 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none text-slate-800 placeholder:text-slate-400 text-sm sm:text-base"
+          />
+          <button id="clearSearchBtn" type="button" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 px-1.5 py-0.5 rounded text-sm">
+            ✕
+          </button>
+        </div>
+
+        <div>
+          <select id="statusFilterSelect" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none bg-slate-50 font-semibold text-slate-700 text-sm sm:text-base">
+            <option value="all">📌 সব স্ট্যাটাস (কাজের অবস্থা)</option>
+            <option value="নতুন কাজ">🔵 নতুন কাজ (New)</option>
+            <option value="কথা চলছে">🟠 কথা চলছে / ভিজিট (Ongoing)</option>
+            <option value="বায়না হয়েছে">🟣 বায়না হয়েছে (Advance Done)</option>
+            <option value="কাজ সম্পন্ন">🟢 কাজ সম্পন্ন / বিক্রি শেষ (Closed)</option>
+            <option value="স্থগিত">⚪ স্থগিত / বাতিল (Hold)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Active Match Banner (Hidden unless matching mode is triggered) -->
+    <div id="matchBanner" class="hidden bg-indigo-950 text-white rounded-2xl p-4 shadow-md flex flex-wrap items-center justify-between gap-3 no-print">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">🔗</span>
+        <div>
+          <div class="text-xs text-indigo-200 font-semibold uppercase">অটো ম্যাচিং ফলাফল</div>
+          <div id="matchBannerTitle" class="font-bold text-base sm:text-lg"></div>
+        </div>
+      </div>
+      <button id="exitMatchBtn" type="button" class="bg-white text-indigo-950 hover:bg-indigo-100 font-bold px-4 py-2 rounded-xl text-sm transition">
+        ✕ ম্যাচিং বন্ধ করুন (সব দেখুন)
+      </button>
+    </div>
+
+    <!-- Cards List Container -->
+    <section id="recordsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Populated by JS -->
+    </section>
+
+    <!-- Empty State -->
+    <section id="emptyState" class="hidden bg-white rounded-2xl p-8 text-center border border-dashed border-slate-300 space-y-3">
+      <div class="text-4xl">📒</div>
+      <h2 class="text-lg font-bold text-slate-800">কোনো তথ্য পাওয়া যায়নি</h2>
+      <p class="text-sm text-slate-600 max-w-md mx-auto">আপনার খোঁজা শর্তের সাথে কোনো প্রপার্টি বা ক্রেতার তথ্য মেলেনি। ফিল্টার পরিবর্তন করুন অথবা উপরের বাটনে চাপ দিয়ে নতুন তথ্য যোগ করুন।</p>
+      <button id="emptyResetBtn" type="button" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition">
+        সব তালিকা দেখুন
+      </button>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="max-w-6xl w-full mx-auto px-4 py-6 text-center text-xs sm:text-sm text-slate-500 border-t border-slate-200 mt-8 no-print">
+    <p>💡 <strong>টিপস:</strong> যেকোনো কার্ডের নিচে <strong>"📎 ছবি/ফাইল"</strong> বাটনে চাপ দিয়ে জমির ছবি, ভিডিও, খতিয়ান/দলিল (PDF) ও ওয়ার্ড (Word) ফাইল সেভ করে রাখতে পারবেন।</p>
+  </footer>
+
+  <!-- ADD / EDIT MODAL -->
+  <div id="entryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-2 sm:p-4 overflow-y-auto no-print">
+    <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[94vh] flex flex-col">
+      <!-- Modal Header -->
+      <div id="modalHeaderBar" class="bg-emerald-800 text-white px-4 sm:px-6 py-4 flex items-center justify-between shrink-0">
+        <div>
+          <span id="modalRoleBadge" class="inline-block text-xs font-bold uppercase px-2.5 py-0.5 rounded-full bg-white/20 text-white mb-1">বিক্রির প্রপার্টি</span>
+          <h2 id="modalTitle" class="text-lg sm:text-xl font-bold">নতুন প্রপার্টির তথ্য যোগ করুন</h2>
+        </div>
+        <button id="closeEntryModalBtn" type="button" class="w-9 h-9 rounded-xl bg-white/15 hover:bg-white/25 flex items-center justify-center text-lg font-bold transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Form Body -->
+      <form id="entryForm" class="p-4 sm:p-6 overflow-y-auto space-y-4 custom-scroll flex-1">
+        <input type="hidden" id="entryId" />
+        <input type="hidden" id="entryRole" value="seller" />
+
+        <!-- Role Switcher inside Modal -->
+        <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-xl">
+          <button type="button" id="formRoleSellerBtn" class="py-2 px-3 rounded-lg font-bold text-sm transition bg-emerald-700 text-white shadow-xs">
+            🏡 বিক্রির প্রপার্টি (মালিক)
+          </button>
+          <button type="button" id="formRoleBuyerBtn" class="py-2 px-3 rounded-lg font-bold text-sm transition text-slate-700 hover:bg-white/60">
+            🤝 ক্রেতার চাহিদা (বায়ার)
+          </button>
+        </div>
+
+        <!-- 1. Property Category & Work Status -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label for="propCategory" class="block text-sm font-bold text-slate-700 mb-1">প্রপার্টির ধরন <span class="text-red-500">*</span></label>
+            <select id="propCategory" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white font-bold text-slate-800 focus:border-emerald-600 outline-none">
+              <option value="জমি">🌱 জমি / প্লট (Land)</option>
+              <option value="বাড়ি">🏠 বাড়ি / ভবন (House)</option>
+              <option value="ফ্ল্যাট">🏢 ফ্ল্যাট / অ্যাপার্টমেন্ট (Flat)</option>
+              <option value="ল্যান্ড শেয়ার">🏗️ ল্যান্ড শেয়ার (Land Share)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="propStatus" class="block text-sm font-bold text-slate-700 mb-1">কাজের বর্তমান অবস্থা (Status) <span class="text-red-500">*</span></label>
+            <select id="propStatus" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white font-bold text-slate-800 focus:border-emerald-600 outline-none">
+              <option value="নতুন কাজ">🔵 নতুন কাজ (New)</option>
+              <option value="কথা চলছে">🟠 কথা চলছে / ভিজিট হয়েছে</option>
+              <option value="বায়না হয়েছে">🟣 বায়না হয়েছে (Advance)</option>
+              <option value="কাজ সম্পন্ন">🟢 কাজ সম্পন্ন / বিক্রি শেষ</option>
+              <option value="স্থগিত">⚪ স্থগিত / আপাতত বন্ধ</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 2. Title & Area/Location -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label for="propArea" class="block text-sm font-bold text-slate-700 mb-1">এলাকা / প্রজেক্টের নাম <span class="text-red-500">*</span></label>
+            <input id="propArea" type="text" required placeholder="যেমন: বসুন্ধরা ব্লক-ডি, উত্তরা সেক্টর-১০, মিরপুর..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none" />
+          </div>
+
+          <div>
+            <label for="propTitle" id="propTitleLabel" class="block text-sm font-bold text-slate-700 mb-1">সংক্ষিপ্ত শিরোনাম (চেনার সুবিধার্থে)</label>
+            <input id="propTitle" type="text" placeholder="যেমন: ৫ কাঠা দক্ষিণমুখী প্লট / কর্নার বাড়ি..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none" />
+          </div>
+        </div>
+
+        <!-- 3. Address Details: Plot/House No, Road No, Block/Sector, Mouza/Dag -->
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-3">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+            <span>📍</span>
+            <span id="addressSectionTitle">জমি / বাড়ির ঠিকানা ও পরিমাপ</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div>
+              <label for="plotOrHouseNo" id="plotLabel" class="block text-xs font-bold text-slate-700 mb-1">প্লট / বাড়ি নং</label>
+              <input id="plotOrHouseNo" type="text" placeholder="যেমন: প্লট ২৪৫ / বাড়ি ১২" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none" />
+            </div>
+
+            <div>
+              <label for="roadNo" class="block text-xs font-bold text-slate-700 mb-1">রোড নং ও চওড়া</label>
+              <input id="roadNo" type="text" placeholder="রোড ৮ (২৫ ফুট)" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none" />
+            </div>
+
+            <div>
+              <label for="blockOrSector" class="block text-xs font-bold text-slate-700 mb-1">ব্লক / সেক্টর / ওয়ার্ড</label>
+              <input id="blockOrSector" type="text" placeholder="ব্লক সি / সেক্টর ৪" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none" />
+            </div>
+
+            <div>
+              <label for="propSize" id="sizeLabel" class="block text-xs font-bold text-slate-700 mb-1">পরিমাণ / সাইজ</label>
+              <input id="propSize" type="text" placeholder="৫ কাঠা / ১৬৫০ বর্গফুট" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none" />
+            </div>
+          </div>
+
+          <!-- Category-Specific Extra Fields -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+            <div>
+              <label for="extraSpec1" id="extraSpec1Label" class="block text-xs font-bold text-slate-700 mb-1">মৌজা / দাগ / খতিয়ান নং</label>
+              <input id="extraSpec1" type="text" placeholder="যেমন: ভাটারা মৌজা, সিএস/আরএস দাগ..." class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none" />
+            </div>
+
+            <div>
+              <label for="extraSpec2" id="extraSpec2Label" class="block text-xs font-bold text-slate-700 mb-1">মুখ (Facing) / তলা</label>
+              <input id="extraSpec2" type="text" placeholder="দক্ষিণমুখী / ৪র্থ তলা, লিফট আছে" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none" />
+            </div>
+
+            <div>
+              <label for="extraSpec3" id="extraSpec3Label" class="block text-xs font-bold text-slate-700 mb-1">কাগজপত্র / বিশেষ তথ্য</label>
+              <input id="extraSpec3" type="text" placeholder="নামজারি ও খাজনা আপ-টু-ডেট / বাউন্ডারি করা" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Owner / Buyer Info & Rate / Budget -->
+        <div class="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200 space-y-3">
+          <div class="text-xs font-bold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+            <span>👤</span>
+            <span id="personSectionTitle">মালিকের তথ্য ও দাম (Rate & Contact)</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label for="personName" id="personNameLabel" class="block text-xs font-bold text-slate-700 mb-1">মালিকের নাম <span class="text-red-500">*</span></label>
+              <input id="personName" type="text" required placeholder="হাজী মো: আবদুল করিম" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none" />
+            </div>
+
+            <div>
+              <label for="personPhone" id="personPhoneLabel" class="block text-xs font-bold text-slate-700 mb-1">মোবাইল নম্বর</label>
+              <input id="personPhone" type="tel" placeholder="017XXXXXXXX" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none" />
+            </div>
+
+            <div>
+              <label for="referenceMedia" class="block text-xs font-bold text-slate-700 mb-1">মাধ্যম / রেফারেন্স (যদি থাকে)</label>
+              <input id="referenceMedia" type="text" placeholder="ডাইরেক্ট মালিক / রফিক মিডিয়া" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <div>
+              <label for="priceRate" id="priceRateLabel" class="block text-xs font-bold text-slate-700 mb-1">মালিকের রেট (প্রতি কাঠা/শেয়ার/স্কয়ার ফিট)</label>
+              <input id="priceRate" type="text" placeholder="যেমন: ৬৫ লক্ষ টাকা কাঠা / ২৫ লাখ শেয়ার" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm font-semibold text-emerald-900 focus:border-emerald-600 outline-none" />
+            </div>
+
+            <div>
+              <label for="totalPriceBudget" id="totalPriceLabel" class="block text-xs font-bold text-slate-700 mb-1">মোট দাম / ক্রেতার বাজেট <span class="text-red-500">*</span></label>
+              <input id="totalPriceBudget" type="text" required placeholder="যেমন: ৩ কোটি ২৫ লক্ষ টাকা (আলোচনা সাপেক্ষে)" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm font-semibold text-amber-900 focus:border-emerald-600 outline-none" />
+            </div>
+
+            <div>
+              <label for="commissionNote" class="block text-xs font-bold text-slate-700 mb-1">কমিশন / ব্রোকারেজ হিসাব</label>
+              <input id="commissionNote" type="text" placeholder="যেমন: ২% কমিশন / ফিক্সড ৫ লাখ" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. NEW: Photo, Video, PDF & Word File Attachments inside Form -->
+        <div class="bg-sky-50/80 p-3.5 rounded-2xl border border-sky-200 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="text-xs font-bold uppercase tracking-wider text-sky-950 flex items-center gap-1.5">
+              <span>📎</span>
+              <span>জমির ছবি, ভিডিও, দলিল (PDF) ও Word ফাইল সংযুক্ত করুন</span>
+            </div>
+            <span class="text-xs text-sky-800 font-medium">একসাথে একাধিক ফাইল দেওয়া যাবে</span>
+          </div>
+
+          <!-- Upload Controls -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <label for="formFileInput" class="cursor-pointer bg-white hover:bg-sky-100/60 border-2 border-dashed border-sky-400 rounded-xl p-3 flex items-center gap-3 transition">
+              <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-800 flex items-center justify-center text-xl shrink-0">
+                📂
+              </div>
+              <div class="text-xs sm:text-sm">
+                <div class="font-bold text-sky-950">+ ছবি, ভিডিও, PDF বা Word নিন</div>
+                <div class="text-slate-500 text-xs">মোবাইল গ্যালারি বা ফাইল থেকে সিলেক্ট করুন</div>
+              </div>
+              <input
+                id="formFileInput"
+                type="file"
+                multiple
+                accept="image/*,video/*,.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                class="hidden"
+              />
+            </label>
+
+            <!-- Optional Drive / Video Link input -->
+            <div class="bg-white border border-sky-200 rounded-xl p-2.5 flex flex-col justify-between gap-1.5">
+              <label for="formExternalLinkInput" class="text-xs font-bold text-slate-700">🔗 অথবা Google Drive / ভিডিও লিংক (যদি থাকে):</label>
+              <div class="flex gap-1.5">
+                <input id="formExternalLinkInput" type="url" placeholder="https://drive.google.com/..." class="flex-1 px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs outline-none focus:border-sky-600" />
+                <button type="button" id="addFormLinkBtn" class="bg-sky-700 hover:bg-sky-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs shrink-0">যোগ</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Staged Attachments Preview inside Form -->
+          <div id="formAttachmentsList" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- 6. Detailed Notes -->
+        <div>
+          <label for="propNotes" id="propNotesLabel" class="block text-sm font-bold text-slate-700 mb-1">বিস্তারিত নোট / শর্তাবলী (খাতার নোট)</label>
+          <textarea id="propNotes" rows="3" placeholder="জমির বা ক্রেতার বিশেষ কোনো শর্ত, পেমেন্ট মেথড, ব্যাংক লোন বা ভিজিটের সময় এখানে লিখে রাখুন..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-sm"></textarea>
+        </div>
+
+        <!-- Form Buttons -->
+        <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-200">
+          <button type="button" id="cancelEntryBtn" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-sm hover:bg-slate-100 transition">
+            বাতিল করুন
+          </button>
+          <button type="submit" class="btn-touch px-6 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-md transition flex items-center gap-1.5">
+            <span>✅</span>
+            <span>খাতায় সেভ করুন</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- QUICK MEDIA & FILES MANAGER MODAL (Direct from Card) -->
+  <div id="mediaManagerModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-3 sm:p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
+      <div class="bg-sky-900 text-white px-5 py-4 flex items-center justify-between shrink-0">
+        <div>
+          <div class="text-xs text-sky-200 font-semibold">📎 ছবি, ভিডিও, দলিল (PDF) ও Word ফাইল ভল্ট</div>
+          <h3 id="mediaModalTitle" class="font-bold text-base sm:text-lg truncate"></h3>
+        </div>
+        <button id="closeMediaModalBtn" type="button" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center font-bold">✕</button>
+      </div>
+
+      <div class="p-4 sm:p-5 space-y-4 overflow-y-auto flex-1 custom-scroll">
+        <!-- Quick Upload Box -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-sky-50 p-3.5 rounded-2xl border border-sky-200">
+          <label for="quickMediaInput" class="cursor-pointer bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl p-3.5 flex items-center justify-center gap-2.5 font-bold text-sm shadow-sm transition text-center">
+            <span class="text-xl">➕</span>
+            <span>মোবাইল/কম্পিউটার থেকে ছবি, ভিডিও, PDF বা Word ফাইল যোগ করুন</span>
+            <input
+              id="quickMediaInput"
+              type="file"
+              multiple
+              accept="image/*,video/*,.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              class="hidden"
+            />
+          </label>
+
+          <div class="bg-white p-3 rounded-xl border border-sky-200 flex flex-col justify-between gap-2">
+            <label for="quickExternalLink" class="text-xs font-bold text-slate-700">🔗 বড় ভিডিও বা Google Drive ফোল্ডার লিংক যোগ করুন:</label>
+            <div class="flex gap-1.5">
+              <input id="quickExternalLink" type="url" placeholder="https://drive.google.com/..." class="flex-1 px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs outline-none" />
+              <button type="button" id="quickAddLinkBtn" class="bg-sky-800 hover:bg-sky-900 text-white font-bold px-3 py-1.5 rounded-lg text-xs shrink-0">যোগ করুন</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Existing Files Grid -->
+        <div id="mediaModalGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULLSCREEN FILE / MEDIA PREVIEW MODAL -->
+  <div id="fileViewerModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-xs z-50 hidden items-center justify-center p-2 sm:p-4 no-print">
+    <div class="bg-slate-900 text-white rounded-2xl max-w-4xl w-full shadow-2xl border border-slate-700 overflow-hidden flex flex-col max-h-[94vh]">
+      <div class="px-4 py-3 bg-slate-800 flex items-center justify-between gap-2 border-b border-slate-700">
+        <div class="truncate">
+          <span id="viewerFileBadge" class="text-xs font-bold uppercase px-2 py-0.5 rounded bg-emerald-600 text-white mr-2">ফাইল</span>
+          <span id="viewerFileName" class="font-bold text-sm sm:text-base"></span>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <a id="viewerDownloadBtn" href="#" download class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs sm:text-sm flex items-center gap-1 transition">
+            <span>⬇️</span>
+            <span>ডাউনলোড</span>
+          </a>
+          <button id="closeViewerModalBtn" type="button" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center font-bold">✕</button>
+        </div>
+      </div>
+      <div id="viewerContentArea" class="p-4 flex-1 overflow-y-auto flex items-center justify-center min-h-[320px] bg-slate-950">
+        <!-- Populated dynamically (Image, Video, PDF iframe, or Word download card) -->
+      </div>
+    </div>
+  </div>
+
+  <!-- FOLLOW-UP / UPDATE LOG MODAL (Quick Note-Taking for a Specific Deal) -->
+  <div id="logModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-3 sm:p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="bg-slate-800 text-white px-5 py-4 flex items-center justify-between">
+        <div>
+          <div class="text-xs text-amber-300 font-semibold">কাজের অগ্রগতি ও ফলো-আপ ডায়েরি</div>
+          <h3 id="logModalTitle" class="font-bold text-base sm:text-lg truncate"></h3>
+        </div>
+        <button id="closeLogModalBtn" type="button" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center font-bold">✕</button>
+      </div>
+
+      <div class="p-4 sm:p-5 space-y-4 overflow-y-auto flex-1 custom-scroll">
+        <!-- Add new quick update -->
+        <form id="addLogForm" class="space-y-2.5 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+          <label for="newLogText" class="block text-xs font-bold text-slate-700">আজকের নতুন কথা বা আপডেট লিখুন:</label>
+          <textarea id="newLogText" rows="2" required placeholder="যেমন: আজকে ক্রেতা নিয়ে প্লট দেখানো হয়েছে, মালিক ৬২ লাখ পর্যন্ত নামতে রাজি..." class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm focus:border-emerald-600 outline-none"></textarea>
+          <div class="flex justify-end">
+            <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm transition">
+              + ডায়েরিতে যোগ করুন
+            </button>
+          </div>
+        </form>
+
+        <!-- Timeline list -->
+        <div class="space-y-2.5" id="logTimelineList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE CONFIRMATION MODAL -->
+  <div id="deleteModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-200 text-center space-y-4">
+      <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-2xl mx-auto">🗑️</div>
+      <h3 class="text-lg font-bold text-slate-800">আপনি কি এই হিসাবটি মুছে ফেলতে চান?</h3>
+      <p id="deleteTargetName" class="text-sm text-slate-600 font-medium"></p>
+      <div class="flex items-center justify-center gap-3 pt-2">
+        <button id="cancelDeleteBtn" type="button" class="flex-1 py-2.5 rounded-xl border border-slate-300 font-bold text-slate-700 text-sm hover:bg-slate-100">না, থাকুক</button>
+        <button id="confirmDeleteBtn" type="button" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 font-bold text-white text-sm">হ্যাঁ, মুছে ফেলুন</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Toast Notification -->
+  <div id="toastBox" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-xl shadow-lg border border-slate-700 text-sm font-semibold flex items-center gap-2 no-print">
+    <span id="toastIcon">✅</span>
+    <span id="toastMsg">সংরক্ষণ করা হয়েছে</span>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'bd_land_broker_khata_v1';
+      const FONT_MODE_KEY = 'bd_land_broker_large_font';
+      const IDB_NAME = 'bd_land_broker_media_db';
+      const IDB_STORE = 'attachments';
+
+      // In-memory cache of binary/dataURL files keyed by attachment id
+      const fileDataCache = {};
+
+      // IndexedDB Helper for storing large Photos, Videos, PDFs, and Word files
+      function openMediaDB() {
+        return new Promise((resolve) => {
+          try {
+            if (!window.indexedDB) return resolve(null);
+            const req = window.indexedDB.open(IDB_NAME, 1);
+            req.onupgradeneeded = (e) => {
+              const db = e.target.result;
+              if (!db.objectStoreNames.contains(IDB_STORE)) {
+                db.createObjectStore(IDB_STORE, { keyPath: 'id' });
+              }
+            };
+            req.onsuccess = (e) => resolve(e.target.result);
+            req.onerror = () => resolve(null);
+          } catch (err) {
+            resolve(null);
+          }
+        });
+      }
+
+      async function saveAttachmentBlobToDB(attId, dataUrl) {
+        fileDataCache[attId] = dataUrl;
+        const db = await openMediaDB();
+        if (!db) return;
+        return new Promise((resolve) => {
+          try {
+            const tx = db.transaction(IDB_STORE, 'readwrite');
+            tx.objectStore(IDB_STORE).put({ id: attId, dataUrl });
+            tx.oncomplete = () => resolve(true);
+            tx.onerror = () => resolve(false);
+          } catch (e) {
+            resolve(false);
+          }
+        });
+      }
+
+      async function loadAllBlobsIntoCache() {
+        const db = await openMediaDB();
+        if (!db) return;
+        return new Promise((resolve) => {
+          try {
+            const tx = db.transaction(IDB_STORE, 'readonly');
+            const req = tx.objectStore(IDB_STORE).getAll();
+            req.onsuccess = () => {
+              const list = req.result || [];
+              list.forEach(item => {
+                if (item && item.id && item.dataUrl) {
+                  fileDataCache[item.id] = item.dataUrl;
+                }
+              });
+              resolve();
+            };
+            req.onerror = () => resolve();
+          } catch (e) {
+            resolve();
+          }
+        });
+      }
+
+      async function deleteAttachmentBlobFromDB(attId) {
+        delete fileDataCache[attId];
+        const db = await openMediaDB();
+        if (!db) return;
+        try {
+          const tx = db.transaction(IDB_STORE, 'readwrite');
+          tx.objectStore(IDB_STORE).delete(attId);
+        } catch (e) {}
+      }
+
+      // Generate a clean sample SVG image Data URL for demo property
+      const SAMPLE_PLOT_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+          <rect width="640" height="400" fill="#ecfdf5"/>
+          <rect x="40" y="40" width="560" height="240" rx="16" fill="#d1fae5" stroke="#059669" stroke-width="4" stroke-dasharray="10,6"/>
+          <rect x="40" y="300" width="560" height="60" rx="8" fill="#334155"/>
+          <line x1="60" y1="330" x2="580" y2="330" stroke="#facc15" stroke-width="4" stroke-dasharray="18,14"/>
+          <text x="320" y="135" font-family="sans-serif" font-size="28" font-weight="bold" fill="#065f46" text-anchor="middle">প্লট # ৩১৮ (৫ কাঠা দক্ষিণমুখী)</text>
+          <text x="320" y="180" font-family="sans-serif" font-size="20" fill="#047857" text-anchor="middle">বসুন্ধরা ব্লক - আই | বাউন্ডারি করা রেডি প্লট</text>
+          <text x="320" y="337" font-family="sans-serif" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle">সামনে ২৫ ফুট পাকা রাস্তা (রোড # ৭)</text>
+        </svg>
+      `);
+
+      // Initial Realistic Sample Data for Bangladesh Real Estate Broker
+      const DEFAULT_RECORDS = [
+        {
+          id: 'rec-101',
+          role: 'seller',
+          category: 'জমি',
+          status: 'কথা চলছে',
+          area: 'বসুন্ধরা আবাসিক এলাকা, ঢাকা',
+          title: '৫ কাঠা দক্ষিণমুখী রেডি প্লট (ব্লক-আই)',
+          plotOrHouseNo: 'প্লট # ৩১৮',
+          roadNo: 'রোড # ৭ (২৫ ফুট পাকা রাস্তা)',
+          blockOrSector: 'ব্লক - আই (Block I)',
+          propSize: '৫ কাঠা',
+          extraSpec1: 'ভাটারা মৌজা, নামজারি ও খাজনা ২০২৬ পর্যন্ত ক্লিয়ার',
+          extraSpec2: 'দক্ষিণমুখী (South Facing), বাউন্ডারি দেয়াল করা',
+          extraSpec3: 'রাজউক ডিমার্কেশন ও পেপার ১০০% রেডি',
+          personName: 'আলহাজ্ব মো: মোস্তফা কামাল',
+          personPhone: '01711223344',
+          referenceMedia: 'ডাইরেক্ট মালিক (পূর্ব পরিচিত)',
+          priceRate: '৭২ লক্ষ টাকা প্রতি কাঠা',
+          totalPriceBudget: '৩ কোটি ৬০ লক্ষ টাকা (সামান্য আলোচনা সাপেক্ষে)',
+          commissionNote: 'মালিক ২% কমিশন দিবেন কথা হয়েছে',
+          notes: 'মালিক জরুরি ভিত্তিতে ছেলের বিদেশে ব্যবসার জন্য বিক্রি করবেন। এককালীন পেমেন্ট হলে কাঠায় ২ লাখ কমানো যাবে।',
+          updatedAt: '২০২৬-১১-০২',
+          attachments: [
+            {
+              id: 'sample-att-1',
+              name: 'বসুন্ধরা_প্লট_৩১৮_লেআউট_ছবি.svg',
+              kind: 'image',
+              mime: 'image/svg+xml',
+              sizeText: '১২ KB',
+              inlineDataUrl: SAMPLE_PLOT_SVG
+            }
+          ],
+          logs: [
+            { date: '০১ নভেম্বর ২০২৬', text: 'মালিকের সাথে সরাসরি কথা হয়েছে, কাগজপত্রের ফটোকপি ফাইলে রাখা হয়েছে।' },
+            { date: '০২ নভেম্বর ২০২৬', text: 'উত্তরার মাহবুব সাহেবকে প্লটটি দেখানো হয়েছে, তিনি ৭০ লাখ করে দিতে চেয়েছেন।' }
+          ]
+        },
+        {
+          id: 'rec-102',
+          role: 'buyer',
+          category: 'জমি',
+          status: 'নতুন কাজ',
+          area: 'বসুন্ধরা বা পূর্বাচল সংলগ্ন এলাকা',
+          title: '৪ থেকে ৬ কাঠা আবাসিক প্লট প্রয়োজন',
+          plotOrHouseNo: 'যেকোনো নিষ্কণ্টক প্লট',
+          roadNo: 'কমপক্ষে ২৫ ফুট রাস্তা হতে হবে',
+          blockOrSector: 'বসুন্ধরা ব্লক এইচ, আই, জে বা এন',
+          propSize: '৪ - ৬ কাঠা',
+          extraSpec1: 'কাগজপত্র সম্পূর্ণ ফ্রেশ ও ডাইরেক্ট মালিক হতে হবে',
+          extraSpec2: 'দক্ষিণমুখী বা পূর্বমুখী পছন্দ',
+          extraSpec3: 'ব্যাংক পেমেন্ট / পে-অর্ডারে রেজিস্ট্রি করবেন',
+          personName: 'ইঞ্জিনিয়ার মাহবুবুর রহমান',
+          personPhone: '01819556677',
+          referenceMedia: 'পুরাতন ক্লায়েন্ট',
+          priceRate: 'সর্বোচ্চ ৬৫-৭০ লক্ষ টাকা কাঠা',
+          totalPriceBudget: '৩ কোটি থেকে ৩.৫ কোটি টাকা বাজেট',
+          commissionNote: 'ক্রেতা ১% সার্ভিস চার্জ দিবেন',
+          notes: 'আগামী শুক্রবার সকালে সপরিবারে প্লট ভিজিট করতে চান। ভালো প্লট পেলে সাথে সাথে বায়না করবেন।',
+          updatedAt: '২০২৬-১১-০২',
+          attachments: [],
+          logs: [
+            { date: '০২ নভেম্বর ২০২৬', text: 'ফোনে বিস্তারিত রিকোয়ারমেন্ট নেওয়া হয়েছে। বসুন্ধরা ব্লক-আই এর ৩১৮ নং প্লটটি উনাকে দেখানো যায়।' }
+          ]
+        },
+        {
+          id: 'rec-103',
+          role: 'seller',
+          category: 'ল্যান্ড শেয়ার',
+          status: 'বায়না হয়েছে',
+          area: 'মিরপুর ৬০ ফিট (পীরেরবাগ), ঢাকা',
+          title: '১০ কাঠা জমিতে ল্যান্ড শেয়ার বিক্রি (১৪৫০ বর্গফুট ফ্ল্যাট)',
+          plotOrHouseNo: 'হোল্ডিং # ৪২/এ',
+          roadNo: 'রোড # ৩ (২০ ফুট রাস্তা)',
+          blockOrSector: 'পীরেরবাগ, মিরপুর',
+          propSize: 'মোট ১০ কাঠা (৩৬টি শেয়ার)',
+          extraSpec1: 'প্রতি শেয়ারে ১৪৫০ বর্গফুট ফ্ল্যাট + ১টি কার পার্কিং',
+          extraSpec2: 'জি+৯ (১০ তলা ভবন), ডাবল লিফট ও জেনেনারেটর',
+          extraSpec3: '৪টি শেয়ার খালি আছে, বাকিগুলো বুকিং শেষ',
+          personName: 'আনোয়ার হোসেন ও জমির মালিকবৃন্দ',
+          personPhone: '01911889900',
+          referenceMedia: 'সাইফুল ভাই (মিডিয়া)',
+          priceRate: '২৮ লক্ষ টাকা প্রতি শেয়ার',
+          totalPriceBudget: '২৮ লক্ষ টাকা (জমির রেজিস্ট্রেশন সহ)',
+          commissionNote: 'প্রতি শেয়ার বিক্রিতে ৫০,০০০ টাকা ফিক্সড কমিশন',
+          notes: 'আগামী ১৫ তারিখের মধ্যে একসাথে সব শেয়ারের সাফ কবলা রেজিস্ট্রি হবে। নির্মাণ খরচ কিস্তিতে দিতে পারবে।',
+          updatedAt: '২০২৬-১১-০১',
+          attachments: [],
+          logs: [
+            { date: '৩০ অক্টোবর ২০২৬', text: 'ক্রেতা কামরুল সাহেব ১টি শেয়ারের জন্য ৫ লক্ষ টাকা বায়না করেছেন।' }
+          ]
+        },
+        {
+          id: 'rec-104',
+          role: 'seller',
+          category: 'ফ্ল্যাট',
+          status: 'নতুন কাজ',
+          area: 'উত্তরা সেক্টর ১০, ঢাকা',
+          title: '১৬৮০ বর্গফুট রেডি ফ্ল্যাট বিক্রি (৪র্থ তলা)',
+          plotOrHouseNo: 'বাড়ি # ১৮',
+          roadNo: 'রোড # ১২',
+          blockOrSector: 'সেক্টর - ১০',
+          propSize: '১৬৮০ স্কয়ার ফিট',
+          extraSpec1: '৩ বেড, ৪ বাথ, ৩ বারান্দা, ড্রয়িং-ডাইনিং আলাদা',
+          extraSpec2: '৪র্থ তলা (লিফটের ৩), ১টি গ্যারান্টেড পার্কিং',
+          extraSpec3: 'তিতাস গ্যাস সংযোগ আছে, রাজউক প্ল্যান পাস',
+          personName: 'ডা: শফিকুল ইসলাম',
+          personPhone: '01611334455',
+          referenceMedia: 'ডাইরেক্ট মালিক',
+          priceRate: '৭,৫০০ টাকা প্রতি বর্গফুট',
+          totalPriceBudget: '১ কোটি ২৫ লক্ষ টাকা (পার্কিং ও ইউটিলিটি সহ)',
+          commissionNote: '১.৫% কমিশন',
+          notes: 'ফ্ল্যাটটি সম্পূর্ণ নতুন রঙ করা এবং কেবিনেট করা আছে। শুধু বিকেলে (৪টা - ৬টা) ভিজিট করা যাবে।',
+          updatedAt: '২০২৬-১০-৩০',
+          attachments: [],
+          logs: []
+        },
+        {
+          id: 'rec-105',
+          role: 'seller',
+          category: 'বাড়ি',
+          status: 'কথা চলছে',
+          area: 'মোহাম্মদপুর চন্দ্রিমা মডেল টাউন, ঢাকা',
+          title: '৪ কাঠা জমির উপর ৫ তলা রানিং ভাড়ার বাড়ি বিক্রি',
+          plotOrHouseNo: 'বাড়ি # ৫৫',
+          roadNo: 'রোড # ৬',
+          blockOrSector: 'ব্লক - বি',
+          propSize: '৪ কাঠা জমির উপর ৫ তলা বাড়ি',
+          extraSpec1: 'প্রতি তলায় ২ ইউনিট (মোট ৯টি ফ্যামিলি ফ্ল্যাট)',
+          extraSpec2: 'মাসিক ভাড়া আসে ১,৮৫,০০০ টাকা',
+          extraSpec3: '৬ তলা ফাউন্ডেশন দেওয়া, তিতাস গ্যাস ও গভীর নলকূপ আছে',
+          personName: 'হাজী আবদুল লতিফ মিয়া',
+          personPhone: '01715998877',
+          referenceMedia: 'ডাইরেক্ট মালিক',
+          priceRate: 'প্যাকেজ মূল্য',
+          totalPriceBudget: '৫ কোটি ৫০ লক্ষ টাকা (আলোচনা সাপেক্ষে)',
+          commissionNote: 'আলোচনা সাপেক্ষে (কমপক্ষে ৫ লক্ষ টাকা)',
+          notes: 'মালিক হজ্জে যাওয়ার আগে বাড়িটি বিক্রি করতে চান। যারা রেডি ভাড়া পাওয়া বাড়ি খুঁজছেন তাদের জন্য সেরা।',
+          updatedAt: '২০২৬-১০-২৯',
+          attachments: [],
+          logs: [
+            { date: '২৯ অক্টোবর ২০২৬', text: 'ধানমন্ডির এক পার্টি কাগজপত্র দেখতে চেয়েছেন।' }
+          ]
+        },
+        {
+          id: 'rec-106',
+          role: 'buyer',
+          category: 'ফ্ল্যাট',
+          status: 'কথা চলছে',
+          area: 'উত্তরা বা মিরপুর ডিওএইচএস সংলগ্ন',
+          title: '১৫০০ - ১৮০০ বর্গফুট রেডি ফ্ল্যাট কিনতে চান',
+          plotOrHouseNo: 'লিফট ও পার্কিং থাকতে হবে',
+          roadNo: 'প্রশস্ত রাস্তা',
+          blockOrSector: 'উত্তরা সেক্টর ৭, ১০, ১১ বা ১২',
+          propSize: '১৫০০ - ১৮০০ স্কয়ার ফিট (৩ বেড)',
+          extraSpec1: 'তিতাস গ্যাস থাকলে অগ্রাধিকার',
+          extraSpec2: '৩য় থেকে ৬ষ্ঠ তলার মধ্যে হতে হবে',
+          extraSpec3: 'রেডি টু মুভ ফ্ল্যাট হতে হবে',
+          personName: 'ব্যাংকার নাজমুল হাসান',
+          personPhone: '01552443322',
+          referenceMedia: 'ফেসবুক পেজ / পরিচিত',
+          priceRate: 'বাজেট অনুযায়ী',
+          totalPriceBudget: '১ কোটি ১০ লক্ষ থেকে ১ কোটি ৩০ লক্ষ টাকা',
+          commissionNote: '১% কমিশন দিবেন',
+          notes: 'ক্যাশ পেমেন্ট রেডি আছে, পছন্দ হলে ১ মাসের মধ্যে রেজিস্ট্রি করবেন।',
+          updatedAt: '২০২৬-১১-০১',
+          attachments: [],
+          logs: []
+        }
+      ];
+
+      // App State
+      let records = [];
+      let filterRole = 'all';
+      let filterCategory = 'all';
+      let filterStatus = 'all';
+      let searchQuery = '';
+      let matchSourceRecord = null;
+      let activeLogRecordId = null;
+      let activeMediaRecordId = null;
+      let pendingDeleteId = null;
+      let stagedFormAttachments = []; // Attachments staged inside Add/Edit modal
+
+      // Bangla Digit Helper
+      const enToBnDigits = {
+        '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪',
+        '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯'
+      };
+      function toBanglaNumber(num) {
+        return String(num).replace(/[0-9]/g, d => enToBnDigits[d] || d);
+      }
+
+      function formatFileSize(bytes) {
+        if (!bytes) return '';
+        if (bytes < 1024) return toBanglaNumber(bytes) + ' B';
+        if (bytes < 1024 * 1024) return toBanglaNumber((bytes / 1024).toFixed(1)) + ' KB';
+        return toBanglaNumber((bytes / (1024 * 1024)).toFixed(1)) + ' MB';
+      }
+
+      function detectAttachmentKind(fileName, mimeType) {
+        const lower = (fileName || '').toLowerCase();
+        const mime = (mimeType || '').toLowerCase();
+        if (mime.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|svg|bmp)$/.test(lower)) return 'image';
+        if (mime.startsWith('video/') || /\.(mp4|mov|webm|avi|mkv|3gp)$/.test(lower)) return 'video';
+        if (mime === 'application/pdf' || /\.pdf$/.test(lower)) return 'pdf';
+        if (mime.includes('word') || /\.(doc|docx|rtf)$/.test(lower)) return 'word';
+        return 'file';
+      }
+
+      function getKindBadge(kind) {
+        if (kind === 'image') return { icon: '🖼️', label: 'ছবি', cls: 'bg-emerald-100 text-emerald-900 border-emerald-300' };
+        if (kind === 'video') return { icon: '🎥', label: 'ভিডিও', cls: 'bg-purple-100 text-purple-900 border-purple-300' };
+        if (kind === 'pdf') return { icon: '📄', label: 'PDF দলিল/ফাইল', cls: 'bg-rose-100 text-rose-900 border-rose-300' };
+        if (kind === 'word') return { icon: '📝', label: 'Word ফাইল', cls: 'bg-sky-100 text-sky-900 border-sky-300' };
+        if (kind === 'link') return { icon: '🔗', label: 'ড্রাইভ/ভিডিও লিংক', cls: 'bg-amber-100 text-amber-950 border-amber-300' };
+        return { icon: '📎', label: 'ফাইল', cls: 'bg-slate-100 text-slate-800 border-slate-300' };
+      }
+
+      // Status Badges Config
+      const STATUS_CONFIG = {
+        'নতুন কাজ': {
+          badgeBg: 'bg-sky-100 text-sky-900 border-sky-300',
+          dot: '🔵',
+          cardBorder: 'border-l-4 border-l-sky-600'
+        },
+        'কথা চলছে': {
+          badgeBg: 'bg-amber-100 text-amber-950 border-amber-300',
+          dot: '🟠',
+          cardBorder: 'border-l-4 border-l-amber-500'
+        },
+        'বায়না হয়েছে': {
+          badgeBg: 'bg-purple-100 text-purple-900 border-purple-300',
+          dot: '🟣',
+          cardBorder: 'border-l-4 border-l-purple-600'
+        },
+        'কাজ সম্পন্ন': {
+          badgeBg: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+          dot: '🟢',
+          cardBorder: 'border-l-4 border-l-emerald-600'
+        },
+        'স্থগিত': {
+          badgeBg: 'bg-slate-200 text-slate-700 border-slate-300',
+          dot: '⚪',
+          cardBorder: 'border-l-4 border-l-slate-400'
+        }
+      };
+
+      const CATEGORY_ICONS = {
+        'জমি': '🌱 জমি / প্লট',
+        'বাড়ি': '🏠 বাড়ি / ভবন',
+        'ফ্ল্যাট': '🏢 ফ্ল্যাট',
+        'ল্যান্ড শেয়ার': '🏗️ ল্যান্ড শেয়ার'
+      };
+
+      // Storage Helpers
+      function loadRecords() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              records = parsed.map(r => ({
+                ...r,
+                attachments: Array.isArray(r.attachments) ? r.attachments : [],
+                logs: Array.isArray(r.logs) ? r.logs : []
+              }));
+              // Ensure sample attachment has its SVG in cache if needed
+              records.forEach(r => {
+                (r.attachments || []).forEach(att => {
+                  if (att.inlineDataUrl) {
+                    fileDataCache[att.id] = att.inlineDataUrl;
+                  }
+                });
+              });
+              return;
+            }
+          }
+        } catch (e) {
+          console.warn('localStorage load fallback', e);
+        }
+        records = JSON.parse(JSON.stringify(DEFAULT_RECORDS));
+        records.forEach(r => {
+          (r.attachments || []).forEach(att => {
+            if (att.inlineDataUrl) {
+              fileDataCache[att.id] = att.inlineDataUrl;
+            }
+          });
+        });
+        saveRecords();
+      }
+
+      function saveRecords() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        } catch (e) {
+          console.warn('localStorage save fallback', e);
+        }
+      }
+
+      function showToast(msg, icon = '✅') {
+        const box = document.getElementById('toastBox');
+        document.getElementById('toastIcon').textContent = icon;
+        document.getElementById('toastMsg').textContent = msg;
+        box.classList.remove('hidden');
+        clearTimeout(window.__toastTimer);
+        window.__toastTimer = setTimeout(() => {
+          box.classList.add('hidden');
+        }, 2800);
+      }
+
+      // Font Mode Setup (Uncle Mode)
+      function initFontMode() {
+        try {
+          const savedLarge = localStorage.getItem(FONT_MODE_KEY);
+          const isLarge = savedLarge === null ? true : savedLarge === '1';
+          applyFontMode(isLarge);
+        } catch (e) {
+          applyFontMode(true);
+        }
+      }
+
+      function applyFontMode(isLarge) {
+        const label = document.getElementById('fontBtnLabel');
+        if (isLarge) {
+          document.body.classList.add('large-text-mode');
+          label.textContent = 'বড় লেখা: চালু';
+        } else {
+          document.body.classList.remove('large-text-mode');
+          label.textContent = 'বড় লেখা';
+        }
+        try {
+          localStorage.setItem(FONT_MODE_KEY, isLarge ? '1' : '0');
+        } catch (e) {}
+      }
+
+      // Dynamic Form Labels based on Role (Seller vs Buyer) and Category
+      function updateFormLabels() {
+        const role = document.getElementById('entryRole').value;
+        const cat = document.getElementById('propCategory').value;
+        const headerBar = document.getElementById('modalHeaderBar');
+        const roleBadge = document.getElementById('modalRoleBadge');
+        const modalTitle = document.getElementById('modalTitle');
+        const isEditing = Boolean(document.getElementById('entryId').value);
+
+        const sellerBtn = document.getElementById('formRoleSellerBtn');
+        const buyerBtn = document.getElementById('formRoleBuyerBtn');
+
+        if (role === 'seller') {
+          headerBar.className = 'bg-emerald-800 text-white px-4 sm:px-6 py-4 flex items-center justify-between shrink-0';
+          roleBadge.textContent = '🏡 বিক্রির প্রপার্টি (Seller / মালিক)';
+          modalTitle.textContent = isEditing ? 'প্রপার্টির তথ্য পরিবর্তন করুন' : 'নতুন বিক্রির প্রপার্টি যোগ করুন';
+          sellerBtn.className = 'py-2 px-3 rounded-lg font-bold text-sm transition bg-emerald-700 text-white shadow-xs';
+          buyerBtn.className = 'py-2 px-3 rounded-lg font-bold text-sm transition text-slate-700 hover:bg-white/60';
+
+          document.getElementById('personSectionTitle').textContent = 'মালিকের তথ্য ও চাওয়া দাম (Owner & Rate)';
+          document.getElementById('personNameLabel').innerHTML = 'মালিকের নাম <span class="text-red-500">*</span>';
+          document.getElementById('priceRateLabel').textContent = 'মালিকের রেট (প্রতি কাঠা/শেয়ার/স্কয়ার ফিট)';
+          document.getElementById('totalPriceLabel').innerHTML = 'মোট চাওয়া দাম <span class="text-red-500">*</span>';
+          document.getElementById('addressSectionTitle').textContent = `${cat}-এর ঠিকানা ও বিবরণ`;
+        } else {
+          headerBar.className = 'bg-amber-700 text-white px-4 sm:px-6 py-4 flex items-center justify-between shrink-0';
+          roleBadge.textContent = '🤝 ক্রেতার চাহিদা (Buyer / বায়ার)';
+          modalTitle.textContent = isEditing ? 'ক্রেতার চাহিদা পরিবর্তন করুন' : 'নতুন ক্রেতার চাহিদা (Requirement) যোগ করুন';
+          buyerBtn.className = 'py-2 px-3 rounded-lg font-bold text-sm transition bg-amber-600 text-white shadow-xs';
+          sellerBtn.className = 'py-2 px-3 rounded-lg font-bold text-sm transition text-slate-700 hover:bg-white/60';
+
+          document.getElementById('personSectionTitle').textContent = 'ক্রেতার তথ্য ও বাজেট (Buyer & Budget)';
+          document.getElementById('personNameLabel').innerHTML = 'ক্রেতার নাম <span class="text-red-500">*</span>';
+          document.getElementById('priceRateLabel').textContent = 'ক্রেতার রেট রেঞ্জ (যদি থাকে)';
+          document.getElementById('totalPriceLabel').innerHTML = 'ক্রেতার বাজেট (Budget) <span class="text-red-500">*</span>';
+          document.getElementById('addressSectionTitle').textContent = `ক্রেতা কেমন ${cat} চাচ্ছেন তার বিবরণ`;
+        }
+
+        const plotLabel = document.getElementById('plotLabel');
+        const sizeLabel = document.getElementById('sizeLabel');
+        const extra1 = document.getElementById('extraSpec1Label');
+        const extra2 = document.getElementById('extraSpec2Label');
+        const extra3 = document.getElementById('extraSpec3Label');
+
+        if (cat === 'জমি') {
+          plotLabel.textContent = 'প্লট / দাগ নং';
+          sizeLabel.textContent = 'জমির পরিমাণ (কাঠা/শতক)';
+          extra1.textContent = 'মৌজা / খতিয়ান / দাগ নং';
+          extra2.textContent = 'জমির মুখ (দক্ষিণমুখী ইত্যাদি)';
+          extra3.textContent = 'কাগজপত্র / বাউন্ডারি অবস্থা';
+        } else if (cat === 'বাড়ি') {
+          plotLabel.textContent = 'বাড়ি / হোল্ডিং নং';
+          sizeLabel.textContent = 'জমির পরিমাণ ও কয় তলা';
+          extra1.textContent = 'মোট ইউনিট / ফ্ল্যাট সংখ্যা';
+          extra2.textContent = 'মাসিক ভাড়া আয় (যদি থাকে)';
+          extra3.textContent = 'গ্যাস / ফাউন্ডেশন / কাগজপত্র';
+        } else if (cat === 'ফ্ল্যাট') {
+          plotLabel.textContent = 'বাড়ি ও ফ্ল্যাট নং';
+          sizeLabel.textContent = 'ফ্ল্যাট সাইজ (স্কয়ার ফিট)';
+          extra1.textContent = 'বেডরুম ও বাথরুম সংখ্যা';
+          extra2.textContent = 'কয় তলায় (ফ্লোর) ও পার্কিং';
+          extra3.textContent = 'লিফট, গ্যাস ও হস্তান্তর অবস্থা';
+        } else if (cat === 'ল্যান্ড শেয়ার') {
+          plotLabel.textContent = 'প্লট / হোল্ডিং নং';
+          sizeLabel.textContent = 'মোট জমি ও মোট শেয়ার সংখ্যা';
+          extra1.textContent = 'প্রতি শেয়ারে ফ্ল্যাট সাইজ';
+          extra2.textContent = 'ভবনের তলা (যেমন: জি+৯) ও পার্কিং';
+          extra3.textContent = 'খালি শেয়ার সংখ্যা ও রেজিস্ট্রি তারিখ';
+        }
+      }
+
+      // Render Summary Status Strip
+      function renderStatsBar() {
+        const statsBar = document.getElementById('statsBar');
+        const total = records.length;
+        const countNew = records.filter(r => r.status === 'নতুন কাজ').length;
+        const countOngoing = records.filter(r => r.status === 'কথা চলছে').length;
+        const countAdvance = records.filter(r => r.status === 'বায়না হয়েছে').length;
+        const countDone = records.filter(r => r.status === 'কাজ সম্পন্ন').length;
+
+        const items = [
+          { key: 'all', label: 'মোট হিসাব', count: total, bg: 'bg-white border-slate-200 text-slate-800', activeRing: 'ring-2 ring-emerald-700 bg-emerald-50/50' },
+          { key: 'নতুন কাজ', label: '🔵 নতুন কাজ', count: countNew, bg: 'bg-sky-50 border-sky-200 text-sky-900', activeRing: 'ring-2 ring-sky-600' },
+          { key: 'কথা চলছে', label: '🟠 কথা চলছে', count: countOngoing, bg: 'bg-amber-50 border-amber-200 text-amber-950', activeRing: 'ring-2 ring-amber-600' },
+          { key: 'বায়না হয়েছে', label: '🟣 বায়না হয়েছে', count: countAdvance, bg: 'bg-purple-50 border-purple-200 text-purple-900', activeRing: 'ring-2 ring-purple-600' },
+          { key: 'কাজ সম্পন্ন', label: '🟢 কাজ সম্পন্ন', count: countDone, bg: 'bg-emerald-50 border-emerald-200 text-emerald-900', activeRing: 'ring-2 ring-emerald-600' }
+        ];
+
+        statsBar.innerHTML = items.map(item => {
+          const isSelected = filterStatus === item.key;
+          return `
+            <button
+              type="button"
+              data-stat-status="${item.key}"
+              class="stat-filter-btn p-3 rounded-2xl border shadow-2xs text-left transition hover:shadow-sm flex flex-col justify-between ${item.bg} ${isSelected ? item.activeRing : ''}"
+            >
+              <span class="text-xs sm:text-sm font-bold opacity-85">${item.label}</span>
+              <span class="text-xl sm:text-2xl font-extrabold mt-1">${toBanglaNumber(item.count)} টি</span>
+            </button>
+          `;
+        }).join('');
+
+        document.getElementById('countRoleAll').textContent = toBanglaNumber(records.length);
+        document.getElementById('countRoleSeller').textContent = toBanglaNumber(records.filter(r => r.role === 'seller').length);
+        document.getElementById('countRoleBuyer').textContent = toBanglaNumber(records.filter(r => r.role === 'buyer').length);
+      }
+
+      // Filter Logic
+      function getFilteredRecords() {
+        if (matchSourceRecord) {
+          const targetRole = matchSourceRecord.role === 'seller' ? 'buyer' : 'seller';
+          return records.filter(r => r.role === targetRole && r.category === matchSourceRecord.category);
+        }
+
+        return records.filter(r => {
+          if (filterRole !== 'all' && r.role !== filterRole) return false;
+          if (filterCategory !== 'all' && r.category !== filterCategory) return false;
+          if (filterStatus !== 'all' && r.status !== filterStatus) return false;
+          if (searchQuery.trim() !== '') {
+            const q = searchQuery.trim().toLowerCase();
+            const haystack = [
+              r.title, r.area, r.plotOrHouseNo, r.roadNo, r.blockOrSector,
+              r.propSize, r.personName, r.personPhone, r.referenceMedia,
+              r.priceRate, r.totalPriceBudget, r.notes, r.category, r.extraSpec1, r.extraSpec2
+            ].join(' ').toLowerCase();
+            if (!haystack.includes(q)) return false;
+          }
+          return true;
+        });
+      }
+
+      function esc(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      // Render attachment pills/thumbnails inside a Property Card
+      function renderCardAttachmentsStrip(r) {
+        const atts = Array.isArray(r.attachments) ? r.attachments : [];
+        if (atts.length === 0) return '';
+
+        const itemsHtml = atts.map(att => {
+          const badge = getKindBadge(att.kind);
+          const dataUrl = fileDataCache[att.id] || att.inlineDataUrl || att.url || '';
+
+          if (att.kind === 'image' && dataUrl) {
+            return `
+              <button
+                type="button"
+                data-view-rec="${r.id}"
+                data-view-att="${att.id}"
+                class="preview-att-btn group relative flex items-center gap-2 bg-white hover:bg-emerald-50 border border-slate-200 rounded-xl p-1.5 pr-3 transition shadow-2xs text-left max-w-full"
+                title="বড় করে দেখুন: ${esc(att.name)}"
+              >
+                <img src="${dataUrl}" alt="${esc(att.name)}" class="w-11 h-11 rounded-lg object-cover shrink-0 border border-slate-200" />
+                <div class="truncate text-xs">
+                  <div class="font-bold text-slate-800 truncate max-w-[140px]">${esc(att.name)}</div>
+                  <div class="text-emerald-700 font-semibold">🖼️ ছবি দেখুন</div>
+                </div>
+              </button>
+            `;
+          }
+
+          if (att.kind === 'link') {
+            return `
+              <a
+                href="${esc(att.url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-xl px-3 py-2 text-xs font-bold text-amber-950 transition"
+              >
+                <span>🔗</span>
+                <span class="truncate max-w-[160px]">${esc(att.name || 'ড্রাইভ/ভিডিও লিংক')}</span>
+                <span>↗</span>
+              </a>
+            `;
+          }
+
+          return `
+            <button
+              type="button"
+              data-view-rec="${r.id}"
+              data-view-att="${att.id}"
+              class="preview-att-btn flex items-center gap-2 border rounded-xl px-3 py-2 text-xs font-bold transition shadow-2xs ${badge.cls}"
+              title="ওপেন বা ডাউনলোড করুন: ${esc(att.name)}"
+            >
+              <span class="text-base">${badge.icon}</span>
+              <div class="text-left truncate">
+                <div class="truncate max-w-[140px]">${esc(att.name)}</div>
+                <div class="text-[11px] opacity-80">${badge.label} ${att.sizeText ? '• ' + esc(att.sizeText) : ''}</div>
+              </div>
+            </button>
+          `;
+        }).join('');
+
+        return `
+          <div class="bg-sky-50/70 border border-sky-200/80 rounded-xl p-2.5 space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold text-sky-950">
+              <span>📎 সংযুক্ত ছবি, ভিডিও ও দলিল (${toBanglaNumber(atts.length)} টি):</span>
+              <button type="button" data-media-id="${r.id}" class="open-media-btn text-sky-700 hover:underline">+ আরও ফাইল যোগ</button>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              ${itemsHtml}
+            </div>
+          </div>
+        `;
+      }
+
+      // Render Cards
+      function renderRecords() {
+        renderStatsBar();
+
+        const filtered = getFilteredRecords();
+        const grid = document.getElementById('recordsGrid');
+        const emptyState = document.getElementById('emptyState');
+        const resetBtn = document.getElementById('resetFiltersBtn');
+        const matchBanner = document.getElementById('matchBanner');
+
+        const hasFilters = filterRole !== 'all' || filterCategory !== 'all' || filterStatus !== 'all' || searchQuery.trim() !== '' || Boolean(matchSourceRecord);
+        resetBtn.classList.toggle('hidden', !hasFilters);
+
+        if (matchSourceRecord) {
+          matchBanner.classList.remove('hidden');
+          const oppositeLabel = matchSourceRecord.role === 'seller' ? 'সম্ভাব্য ক্রেতার চাহিদা (Buyers)' : 'বিক্রির উপযুক্ত প্রপার্টি (Properties)';
+          document.getElementById('matchBannerTitle').textContent = `"${matchSourceRecord.title || matchSourceRecord.area}" (${matchSourceRecord.category}) - এর সাথে মেলে এমন ${oppositeLabel}: ${toBanglaNumber(filtered.length)} টি`;
+        } else {
+          matchBanner.classList.add('hidden');
+        }
+
+        if (filtered.length === 0) {
+          grid.innerHTML = '';
+          emptyState.classList.remove('hidden');
+          return;
+        }
+        emptyState.classList.add('hidden');
+
+        grid.innerHTML = filtered.map(r => {
+          const st = STATUS_CONFIG[r.status] || STATUS_CONFIG['নতুন কাজ'];
+          const isSeller = r.role === 'seller';
+          const roleBadgeClass = isSeller
+            ? 'bg-emerald-800 text-white'
+            : 'bg-amber-600 text-white';
+          const roleText = isSeller ? '🏡 বিক্রির প্রপার্টি (মালিক)' : '🤝 ক্রেতার চাহিদা (বায়ার)';
+          const personTitle = isSeller ? 'মালিকের নাম:' : 'ক্রেতার নাম:';
+          const totalTitle = isSeller ? 'চাওয়া দাম:' : 'ক্রেতার বাজেট:';
+          const rateTitle = isSeller ? 'মালিকের রেট:' : 'রেট ধারণা:';
+          const logCount = Array.isArray(r.logs) ? r.logs.length : 0;
+          const attCount = Array.isArray(r.attachments) ? r.attachments.length : 0;
+          const latestLog = logCount > 0 ? r.logs[r.logs.length - 1] : null;
+
+          const oppositeRole = isSeller ? 'buyer' : 'seller';
+          const matchCount = records.filter(other => other.role === oppositeRole && other.category === r.category && other.status !== 'কাজ সম্পন্ন').length;
+
+          return `
+            <article class="print-card bg-white rounded-2xl shadow-xs hover:shadow-md transition border border-slate-200 ${st.cardBorder} flex flex-col justify-between overflow-hidden">
+              <div>
+                <!-- Card Top Strip: Role, Category & Quick Status Selector -->
+                <div class="px-4 py-3 bg-slate-50 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="px-2.5 py-1 rounded-lg text-xs font-bold ${roleBadgeClass}">${roleText}</span>
+                    <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-200 text-slate-800">${esc(CATEGORY_ICONS[r.category] || r.category)}</span>
+                  </div>
+
+                  <!-- Instant Status Changer for Uncle -->
+                  <div class="flex items-center gap-1">
+                    <label class="sr-only" for="status-select-${r.id}">স্ট্যাটাস</label>
+                    <select
+                      id="status-select-${r.id}"
+                      data-status-id="${r.id}"
+                      class="quick-status-select text-xs sm:text-sm font-bold px-2.5 py-1.5 rounded-xl border cursor-pointer outline-none transition ${st.badgeBg}"
+                      title="কাজের অবস্থা পরিবর্তন করুন"
+                    >
+                      <option value="নতুন কাজ" ${r.status === 'নতুন কাজ' ? 'selected' : ''}>🔵 নতুন কাজ</option>
+                      <option value="কথা চলছে" ${r.status === 'কথা চলছে' ? 'selected' : ''}>🟠 কথা চলছে / ভিজিট</option>
+                      <option value="বায়না হয়েছে" ${r.status === 'বায়না হয়েছে' ? 'selected' : ''}>🟣 বায়না হয়েছে</option>
+                      <option value="কাজ সম্পন্ন" ${r.status === 'কাজ সম্পন্ন' ? 'selected' : ''}>🟢 কাজ সম্পন্ন</option>
+                      <option value="স্থগিত" ${r.status === 'স্থগিত' ? 'selected' : ''}>⚪ স্থগিত / বন্ধ</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Card Main Body -->
+                <div class="p-4 space-y-3 card-body-text">
+                  <!-- Area & Title -->
+                  <div>
+                    <div class="text-xs sm:text-sm font-bold text-emerald-800 flex items-center gap-1">
+                      <span>📍</span>
+                      <span>${esc(r.area)}</span>
+                    </div>
+                    <h3 class="card-title text-lg sm:text-xl font-bold text-slate-900 mt-0.5 leading-snug">
+                      ${esc(r.title || (r.category + ' - ' + r.area))}
+                    </h3>
+                  </div>
+
+                  <!-- Key Plot / Road / Block / Size Grid -->
+                  <div class="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200/80 text-xs sm:text-sm">
+                    <div>
+                      <span class="text-slate-500 block">প্লট / বাড়ি নং:</span>
+                      <span class="font-bold text-slate-800">${esc(r.plotOrHouseNo || 'উল্লেখ নেই')}</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-500 block">রোড নং:</span>
+                      <span class="font-bold text-slate-800">${esc(r.roadNo || 'উল্লেখ নেই')}</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-500 block">ব্লক / সেক্টর:</span>
+                      <span class="font-bold text-slate-800">${esc(r.blockOrSector || 'উল্লেখ নেই')}</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-500 block">পরিমাণ / সাইজ:</span>
+                      <span class="font-bold text-emerald-900">${esc(r.propSize || 'উল্লেখ নেই')}</span>
+                    </div>
+                  </div>
+
+                  <!-- Extra Specifications (Mouza, Facing, Papers) -->
+                  ${(r.extraSpec1 || r.extraSpec2 || r.extraSpec3) ? `
+                    <div class="flex flex-wrap gap-1.5 text-xs">
+                      ${r.extraSpec1 ? `<span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200">📄 ${esc(r.extraSpec1)}</span>` : ''}
+                      ${r.extraSpec2 ? `<span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200">🧭 ${esc(r.extraSpec2)}</span>` : ''}
+                      ${r.extraSpec3 ? `<span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200">✔️ ${esc(r.extraSpec3)}</span>` : ''}
+                    </div>
+                  ` : ''}
+
+                  <!-- Owner / Buyer & Price Highlight Box -->
+                  <div class="bg-amber-50/90 border border-amber-200/90 rounded-xl p-3 space-y-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                      <div>
+                        <span class="text-xs text-slate-500 block">${personTitle}</span>
+                        <span class="font-bold text-slate-900 text-base">${esc(r.personName)}</span>
+                        ${r.referenceMedia ? `<span class="text-xs text-slate-600 block">মাধ্যম: ${esc(r.referenceMedia)}</span>` : ''}
+                      </div>
+
+                      ${r.personPhone ? `
+                        <div class="flex items-center gap-1.5 no-print">
+                          <a href="tel:${esc(r.personPhone)}" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-3 py-1.5 rounded-xl text-xs sm:text-sm flex items-center gap-1 shadow-2xs transition">
+                            <span>📞</span>
+                            <span>${esc(r.personPhone)}</span>
+                          </a>
+                          <button type="button" data-copy-phone="${esc(r.personPhone)}" class="copy-phone-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 px-2 py-1.5 rounded-xl text-xs font-semibold transition" title="নম্বর কপি করুন">
+                            কপি
+                          </button>
+                        </div>
+                      ` : ''}
+                    </div>
+
+                    <div class="pt-2 border-t border-amber-200/70 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div>
+                        <span class="text-xs text-slate-500 block">${rateTitle}</span>
+                        <span class="font-bold text-emerald-900">${esc(r.priceRate || 'আলোচনা সাপেক্ষে')}</span>
+                      </div>
+                      <div>
+                        <span class="text-xs text-slate-500 block">${totalTitle}</span>
+                        <span class="font-extrabold text-amber-950 text-base">${esc(r.totalPriceBudget)}</span>
+                      </div>
+                    </div>
+
+                    ${r.commissionNote ? `
+                      <div class="text-xs text-emerald-950 bg-emerald-100/70 px-2.5 py-1 rounded-lg font-semibold">
+                        💰 ব্রোকারেজ / কমিশন: ${esc(r.commissionNote)}
+                      </div>
+                    ` : ''}
+                  </div>
+
+                  <!-- Attached Photos, Videos, PDFs & Word Files Gallery Strip -->
+                  ${renderCardAttachmentsStrip(r)}
+
+                  <!-- Broker Notes -->
+                  ${r.notes ? `
+                    <div class="text-xs sm:text-sm text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                      <strong class="text-slate-900">📝 নোট:</strong> ${esc(r.notes)}
+                    </div>
+                  ` : ''}
+
+                  <!-- Latest Diary Update Preview -->
+                  ${latestLog ? `
+                    <div class="text-xs bg-indigo-50/80 text-indigo-950 p-2.5 rounded-xl border border-indigo-200 flex items-start justify-between gap-2">
+                      <div>
+                        <span class="font-bold">📌 সর্বশেষ আপডেট (${esc(latestLog.date)}):</span>
+                        <span>${esc(latestLog.text)}</span>
+                      </div>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+
+              <!-- Card Footer Action Bar -->
+              <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-2 no-print">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <!-- Quick Attach Media / Files Button -->
+                  <button
+                    type="button"
+                    data-media-id="${r.id}"
+                    class="open-media-btn bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-300 font-bold px-2.5 py-1.5 rounded-xl text-xs sm:text-sm transition flex items-center gap-1"
+                    title="ছবি, ভিডিও, পিডিএফ বা ওয়ার্ড ফাইল যোগ করুন"
+                  >
+                    <span>📎</span>
+                    <span>ছবি/ফাইল (${toBanglaNumber(attCount)})</span>
+                  </button>
+
+                  <!-- Follow-up Diary Button -->
+                  <button
+                    type="button"
+                    data-log-id="${r.id}"
+                    class="open-log-btn bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-200 font-bold px-2.5 py-1.5 rounded-xl text-xs sm:text-sm transition flex items-center gap-1"
+                  >
+                    <span>📓</span>
+                    <span>ডায়েরি (${toBanglaNumber(logCount)})</span>
+                  </button>
+
+                  <!-- Smart Match Button -->
+                  <button
+                    type="button"
+                    data-match-id="${r.id}"
+                    class="find-match-btn bg-amber-50 hover:bg-amber-100 text-amber-950 border border-amber-300 font-bold px-2.5 py-1.5 rounded-xl text-xs sm:text-sm transition flex items-center gap-1"
+                    title="এই প্রপার্টির সাথে মেলে এমন ক্রেতা বা বিক্রেতা খুঁজুন"
+                  >
+                    <span>🔗</span>
+                    <span>ম্যাচিং (${toBanglaNumber(matchCount)})</span>
+                  </button>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    data-edit-id="${r.id}"
+                    class="edit-record-btn bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold px-3 py-1.5 rounded-xl text-xs sm:text-sm transition"
+                  >
+                    ✏️ এডিট
+                  </button>
+                  <button
+                    type="button"
+                    data-delete-id="${r.id}"
+                    class="delete-record-btn bg-white hover:bg-red-50 text-red-600 border border-red-200 font-bold px-2.5 py-1.5 rounded-xl text-xs sm:text-sm transition"
+                    title="মুছে ফেলুন"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      // Render Staged Attachments List inside Form Modal
+      function renderFormStagedAttachments() {
+        const container = document.getElementById('formAttachmentsList');
+        if (stagedFormAttachments.length === 0) {
+          container.innerHTML = `<div class="col-span-full text-xs text-slate-500 italic">এখনো কোনো ছবি বা ফাইল যুক্ত করা হয়নি।</div>`;
+          return;
+        }
+        container.innerHTML = stagedFormAttachments.map((att, index) => {
+          const badge = getKindBadge(att.kind);
+          const dataUrl = fileDataCache[att.id] || att.inlineDataUrl || '';
+          return `
+            <div class="bg-white border border-slate-200 rounded-xl p-2 flex items-center justify-between gap-2 shadow-2xs">
+              <div class="flex items-center gap-2 truncate">
+                ${att.kind === 'image' && dataUrl
+                  ? `<img src="${dataUrl}" class="w-9 h-9 rounded-lg object-cover shrink-0 border" alt="" />`
+                  : `<span class="text-lg shrink-0">${badge.icon}</span>`
+                }
+                <div class="truncate text-xs">
+                  <div class="font-bold text-slate-800 truncate">${esc(att.name)}</div>
+                  <div class="text-slate-500">${badge.label} ${att.sizeText ? '• ' + esc(att.sizeText) : ''}</div>
+                </div>
+              </div>
+              <button type="button" data-remove-staged="${index}" class="remove-staged-att-btn text-red-500 hover:bg-red-50 px-2 py-1 rounded-lg text-xs font-bold shrink-0">✕</button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Read uploaded FileList and store in IndexedDB + return attachment metadata objects
+      async function processUploadedFiles(fileList) {
+        const created = [];
+        for (let i = 0; i < fileList.length; i++) {
+          const file = fileList[i];
+          const attId = 'att-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+          const kind = detectAttachmentKind(file.name, file.type);
+          const sizeText = formatFileSize(file.size);
+
+          const dataUrl = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(file);
+          });
+
+          if (dataUrl) {
+            await saveAttachmentBlobToDB(attId, dataUrl);
+            created.push({
+              id: attId,
+              name: file.name,
+              kind,
+              mime: file.type || 'application/octet-stream',
+              sizeText
+            });
+          }
+        }
+        return created;
+      }
+
+      // Open Modal for New or Edit
+      function openEntryModal(role = 'seller', editRecord = null) {
+        const modal = document.getElementById('entryModal');
+        const form = document.getElementById('entryForm');
+        form.reset();
+
+        if (editRecord) {
+          document.getElementById('entryId').value = editRecord.id;
+          document.getElementById('entryRole').value = editRecord.role;
+          document.getElementById('propCategory').value = editRecord.category || 'জমি';
+          document.getElementById('propStatus').value = editRecord.status || 'নতুন কাজ';
+          document.getElementById('propArea').value = editRecord.area || '';
+          document.getElementById('propTitle').value = editRecord.title || '';
+          document.getElementById('plotOrHouseNo').value = editRecord.plotOrHouseNo || '';
+          document.getElementById('roadNo').value = editRecord.roadNo || '';
+          document.getElementById('blockOrSector').value = editRecord.blockOrSector || '';
+          document.getElementById('propSize').value = editRecord.propSize || '';
+          document.getElementById('extraSpec1').value = editRecord.extraSpec1 || '';
+          document.getElementById('extraSpec2').value = editRecord.extraSpec2 || '';
+          document.getElementById('extraSpec3').value = editRecord.extraSpec3 || '';
+          document.getElementById('personName').value = editRecord.personName || '';
+          document.getElementById('personPhone').value = editRecord.personPhone || '';
+          document.getElementById('referenceMedia').value = editRecord.referenceMedia || '';
+          document.getElementById('priceRate').value = editRecord.priceRate || '';
+          document.getElementById('totalPriceBudget').value = editRecord.totalPriceBudget || '';
+          document.getElementById('commissionNote').value = editRecord.commissionNote || '';
+          document.getElementById('propNotes').value = editRecord.notes || '';
+          stagedFormAttachments = Array.isArray(editRecord.attachments) ? JSON.parse(JSON.stringify(editRecord.attachments)) : [];
+        } else {
+          document.getElementById('entryId').value = '';
+          document.getElementById('entryRole').value = role;
+          document.getElementById('propCategory').value = filterCategory !== 'all' ? filterCategory : 'জমি';
+          document.getElementById('propStatus').value = 'নতুন কাজ';
+          stagedFormAttachments = [];
+        }
+
+        updateFormLabels();
+        renderFormStagedAttachments();
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      function closeEntryModal() {
+        const modal = document.getElementById('entryModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      // Open Media & Files Manager Modal for a specific card
+      function openMediaManagerModal(recordId) {
+        const rec = records.find(r => r.id === recordId);
+        if (!rec) return;
+        activeMediaRecordId = recordId;
+        document.getElementById('mediaModalTitle').textContent = `${rec.title || rec.area} (${rec.personName})`;
+        document.getElementById('quickExternalLink').value = '';
+        renderMediaModalGrid();
+
+        const modal = document.getElementById('mediaManagerModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      function closeMediaManagerModal() {
+        const modal = document.getElementById('mediaManagerModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        activeMediaRecordId = null;
+      }
+
+      function renderMediaModalGrid() {
+        const rec = records.find(r => r.id === activeMediaRecordId);
+        const grid = document.getElementById('mediaModalGrid');
+        if (!rec) return;
+        const atts = Array.isArray(rec.attachments) ? rec.attachments : [];
+        if (atts.length === 0) {
+          grid.innerHTML = `<div class="col-span-full text-center py-8 text-slate-400 text-sm">এই প্রপার্টিতে এখনো কোনো ছবি, ভিডিও, PDF বা Word ফাইল যোগ করা হয়নি। উপরের বাটনে চাপ দিয়ে ফাইল যোগ করুন।</div>`;
+          return;
+        }
+
+        grid.innerHTML = atts.map((att, idx) => {
+          const badge = getKindBadge(att.kind);
+          const dataUrl = fileDataCache[att.id] || att.inlineDataUrl || '';
+
+          return `
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 flex flex-col justify-between gap-3">
+              <div class="flex items-start gap-3">
+                ${att.kind === 'image' && dataUrl
+                  ? `<img src="${dataUrl}" class="w-16 h-16 rounded-xl object-cover border border-slate-300 shrink-0" alt="${esc(att.name)}" />`
+                  : `<div class="w-14 h-14 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-2xl shrink-0">${badge.icon}</div>`
+                }
+                <div class="min-w-0 flex-1">
+                  <span class="inline-block text-[11px] font-bold px-2 py-0.5 rounded-md border ${badge.cls} mb-1">${badge.label}</span>
+                  <div class="font-bold text-sm text-slate-900 truncate" title="${esc(att.name)}">${esc(att.name)}</div>
+                  ${att.sizeText ? `<div class="text-xs text-slate-500">${esc(att.sizeText)}</div>` : ''}
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-200/80">
+                ${att.kind === 'link'
+                  ? `<a href="${esc(att.url)}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-center font-bold py-1.5 px-3 rounded-xl text-xs transition">🔗 লিংক ওপেন করুন ↗</a>`
+                  : `<button type="button" data-modal-preview="${att.id}" class="modal-preview-btn flex-1 bg-sky-800 hover:bg-sky-900 text-white font-bold py-1.5 px-3 rounded-xl text-xs transition">👁️ দেখুন / ডাউনলোড</button>`
+                }
+                <button type="button" data-modal-del-att="${idx}" class="modal-del-att-btn bg-white hover:bg-red-50 text-red-600 border border-red-200 font-bold py-1.5 px-3 rounded-xl text-xs transition">🗑️ মুছুন</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Open Fullscreen Viewer for Photo, Video, PDF, or Word file
+      function openFileViewer(recordId, attId) {
+        const rec = records.find(r => r.id === recordId);
+        if (!rec || !Array.isArray(rec.attachments)) return;
+        const att = rec.attachments.find(a => a.id === attId);
+        if (!att) return;
+
+        if (att.kind === 'link' && att.url) {
+          window.open(att.url, '_blank', 'noopener,noreferrer');
+          return;
+        }
+
+        const dataUrl = fileDataCache[att.id] || att.inlineDataUrl;
+        if (!dataUrl) {
+          showToast('ফাইলটি পাওয়া যায়নি!', '⚠️');
+          return;
+        }
+
+        const badge = getKindBadge(att.kind);
+        document.getElementById('viewerFileBadge').textContent = badge.label;
+        document.getElementById('viewerFileName').textContent = att.name;
+
+        const dlBtn = document.getElementById('viewerDownloadBtn');
+        dlBtn.href = dataUrl;
+        dlBtn.setAttribute('download', att.name || 'file');
+
+        const contentArea = document.getElementById('viewerContentArea');
+        if (att.kind === 'image') {
+          contentArea.innerHTML = `<img src="${dataUrl}" alt="${esc(att.name)}" class="max-w-full max-h-[75vh] h-auto rounded-xl object-contain shadow-lg" />`;
+        } else if (att.kind === 'video') {
+          contentArea.innerHTML = `
+            <video src="${dataUrl}" controls autoplay class="max-w-full max-h-[75vh] rounded-xl shadow-lg bg-black">
+              আপনার ব্রাউজারে ভিডিও প্লে হচ্ছে না। ডাউনলোড করে দেখুন।
+            </video>
+          `;
+        } else if (att.kind === 'pdf') {
+          contentArea.innerHTML = `
+            <div class="w-full h-[72vh] flex flex-col gap-3">
+              <iframe src="${dataUrl}" class="w-full flex-1 rounded-xl bg-white border border-slate-700"></iframe>
+            </div>
+          `;
+        } else {
+          // Word (.doc / .docx) or general document
+          contentArea.innerHTML = `
+            <div class="text-center space-y-4 p-6 bg-slate-900 rounded-2xl border border-slate-700 max-w-md">
+              <div class="text-5xl">${badge.icon}</div>
+              <h4 class="text-lg font-bold text-white">${esc(att.name)}</h4>
+              <p class="text-xs sm:text-sm text-slate-300">এটি একটি ${badge.label} (${esc(att.sizeText || '')})। মোবাইল বা কম্পিউটারে ওপেন করতে নিচের ডাউনলোড বাটনে চাপ দিন।</p>
+              <a href="${dataUrl}" download="${esc(att.name)}" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-sm shadow-md transition">
+                <span>⬇️</span>
+                <span>ফাইলটি ডাউনলোড / ওপেন করুন</span>
+              </a>
+            </div>
+          `;
+        }
+
+        const modal = document.getElementById('fileViewerModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      function closeFileViewer() {
+        const modal = document.getElementById('fileViewerModal');
+        document.getElementById('viewerContentArea').innerHTML = '';
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      // Open Follow-up Log Modal
+      function openLogModal(recordId) {
+        const rec = records.find(r => r.id === recordId);
+        if (!rec) return;
+        activeLogRecordId = recordId;
+        document.getElementById('logModalTitle').textContent = `${rec.title || rec.area} (${rec.personName})`;
+        document.getElementById('newLogText').value = '';
+        renderLogTimeline();
+
+        const modal = document.getElementById('logModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      function closeLogModal() {
+        const modal = document.getElementById('logModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        activeLogRecordId = null;
+      }
+
+      function renderLogTimeline() {
+        const rec = records.find(r => r.id === activeLogRecordId);
+        const listEl = document.getElementById('logTimelineList');
+        if (!rec) return;
+
+        const logs = Array.isArray(rec.logs) ? rec.logs : [];
+        if (logs.length === 0) {
+          listEl.innerHTML = `<div class="text-center py-6 text-slate-400 text-sm">এখনো কোনো ডায়েরি নোট লেখা হয়নি। উপরে আজকের আপডেট লিখুন।</div>`;
+          return;
+        }
+
+        listEl.innerHTML = logs.slice().reverse().map((item, idx) => {
+          const originalIdx = logs.length - 1 - idx;
+          return `
+            <div class="bg-white p-3 rounded-xl border border-slate-200 flex items-start justify-between gap-2 shadow-2xs">
+              <div class="space-y-1">
+                <span class="inline-block text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md">📅 ${esc(item.date)}</span>
+                <p class="text-sm text-slate-800">${esc(item.text)}</p>
+              </div>
+              <button type="button" data-del-log="${originalIdx}" class="del-log-item-btn text-slate-400 hover:text-red-600 text-xs px-1.5 py-0.5" title="মুছুন">✕</button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Copy helper
+      function copyTextToClipboard(text, customMsg) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast(customMsg || `কপি হয়েছে: ${text}`, '📋');
+          }).catch(() => fallbackCopy(text, customMsg));
+        } else {
+          fallbackCopy(text, customMsg);
+        }
+      }
+
+      function fallbackCopy(text, customMsg) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          showToast(customMsg || `কপি হয়েছে: ${text}`, '📋');
+        } catch (e) {}
+        document.body.removeChild(ta);
+      }
+
+      function getBanglaTodayString() {
+        const months = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+        const d = new Date();
+        return `${toBanglaNumber(d.getDate())} ${months[d.getMonth()]} ${toBanglaNumber(d.getFullYear())}`;
+      }
+
+      function syncFilterUI() {
+        document.querySelectorAll('.role-tab').forEach(btn => {
+          const isAct = btn.getAttribute('data-role') === filterRole;
+          btn.className = isAct
+            ? 'role-tab btn-touch px-3.5 py-2 rounded-xl font-bold text-sm transition bg-emerald-900 text-white shadow-sm'
+            : 'role-tab btn-touch px-3.5 py-2 rounded-xl font-bold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200';
+        });
+
+        document.querySelectorAll('.cat-pill').forEach(btn => {
+          const isAct = btn.getAttribute('data-cat') === filterCategory;
+          btn.className = isAct
+            ? 'cat-pill px-3 py-1.5 rounded-xl text-sm font-bold transition bg-amber-500 text-slate-950 shrink-0 shadow-2xs'
+            : 'cat-pill px-3 py-1.5 rounded-xl text-sm font-semibold transition bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0';
+        });
+
+        document.getElementById('statusFilterSelect').value = filterStatus;
+      }
+
+      function resetAllFilters() {
+        filterRole = 'all';
+        filterCategory = 'all';
+        filterStatus = 'all';
+        searchQuery = '';
+        matchSourceRecord = null;
+        document.getElementById('searchInput').value = '';
+        document.getElementById('clearSearchBtn').classList.add('hidden');
+        syncFilterUI();
+        renderRecords();
+      }
+
+      // Bind All Events
+      function bindEvents() {
+        // Toggle Font Mode
+        document.getElementById('toggleFontBtn').addEventListener('click', () => {
+          const currentlyLarge = document.body.classList.contains('large-text-mode');
+          applyFontMode(!currentlyLarge);
+          showToast(!currentlyLarge ? 'বড় লেখার মোড চালু হয়েছে' : 'সাধারণ লেখার মোড চালু হয়েছে', '🔍');
+        });
+
+        // Big Top Add Buttons
+        document.getElementById('addSellerPropBtn').addEventListener('click', () => openEntryModal('seller'));
+        document.getElementById('addBuyerReqBtn').addEventListener('click', () => openEntryModal('buyer'));
+
+        // Modal Close & Role switch inside modal
+        document.getElementById('closeEntryModalBtn').addEventListener('click', closeEntryModal);
+        document.getElementById('cancelEntryBtn').addEventListener('click', closeEntryModal);
+        document.getElementById('formRoleSellerBtn').addEventListener('click', () => {
+          document.getElementById('entryRole').value = 'seller';
+          updateFormLabels();
+        });
+        document.getElementById('formRoleBuyerBtn').addEventListener('click', () => {
+          document.getElementById('entryRole').value = 'buyer';
+          updateFormLabels();
+        });
+        document.getElementById('propCategory').addEventListener('change', updateFormLabels);
+
+        // File Attachment Upload inside Form Modal
+        document.getElementById('formFileInput').addEventListener('change', async (e) => {
+          const files = e.target.files;
+          if (!files || files.length === 0) return;
+          showToast('ফাইল যুক্ত হচ্ছে...', '⏳');
+          const added = await processUploadedFiles(files);
+          stagedFormAttachments.push(...added);
+          e.target.value = '';
+          renderFormStagedAttachments();
+          showToast(`${toBanglaNumber(added.length)} টি ফাইল যুক্ত হয়েছে!`, '📎');
+        });
+
+        // External Link inside Form Modal
+        document.getElementById('addFormLinkBtn').addEventListener('click', () => {
+          const urlInput = document.getElementById('formExternalLinkInput');
+          const url = urlInput.value.trim();
+          if (!url) return;
+          stagedFormAttachments.push({
+            id: 'link-' + Date.now(),
+            name: url.replace(/^https?:\/\//, '').slice(0, 36),
+            kind: 'link',
+            url
+          });
+          urlInput.value = '';
+          renderFormStagedAttachments();
+          showToast('লিংক যুক্ত হয়েছে!', '🔗');
+        });
+
+        // Remove staged attachment inside Form Modal
+        document.getElementById('formAttachmentsList').addEventListener('click', (e) => {
+          const btn = e.target.closest('.remove-staged-att-btn');
+          if (!btn) return;
+          const idx = Number(btn.getAttribute('data-remove-staged'));
+          stagedFormAttachments.splice(idx, 1);
+          renderFormStagedAttachments();
+        });
+
+        // Save Entry Form
+        document.getElementById('entryForm').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const id = document.getElementById('entryId').value;
+          const existing = id ? records.find(r => r.id === id) : null;
+
+          const payload = {
+            id: id || ('rec-' + Date.now()),
+            role: document.getElementById('entryRole').value,
+            category: document.getElementById('propCategory').value,
+            status: document.getElementById('propStatus').value,
+            area: document.getElementById('propArea').value.trim(),
+            title: document.getElementById('propTitle').value.trim(),
+            plotOrHouseNo: document.getElementById('plotOrHouseNo').value.trim(),
+            roadNo: document.getElementById('roadNo').value.trim(),
+            blockOrSector: document.getElementById('blockOrSector').value.trim(),
+            propSize: document.getElementById('propSize').value.trim(),
+            extraSpec1: document.getElementById('extraSpec1').value.trim(),
+            extraSpec2: document.getElementById('extraSpec2').value.trim(),
+            extraSpec3: document.getElementById('extraSpec3').value.trim(),
+            personName: document.getElementById('personName').value.trim(),
+            personPhone: document.getElementById('personPhone').value.trim(),
+            referenceMedia: document.getElementById('referenceMedia').value.trim(),
+            priceRate: document.getElementById('priceRate').value.trim(),
+            totalPriceBudget: document.getElementById('totalPriceBudget').value.trim(),
+            commissionNote: document.getElementById('commissionNote').value.trim(),
+            notes: document.getElementById('propNotes').value.trim(),
+            updatedAt: getBanglaTodayString(),
+            attachments: stagedFormAttachments,
+            logs: existing && Array.isArray(existing.logs) ? existing.logs : []
+          };
+
+          if (existing) {
+            const idx = records.findIndex(r => r.id === id);
+            records[idx] = payload;
+            showToast('তথ্য ও ফাইল সফলভাবে আপডেট করা হয়েছে!');
+          } else {
+            records.unshift(payload);
+            showToast('নতুন হিসাব খাতায় যোগ করা হয়েছে!');
+          }
+
+          saveRecords();
+          closeEntryModal();
+          renderRecords();
+        });
+
+        // Quick Media & Files Modal Events
+        document.getElementById('closeMediaModalBtn').addEventListener('click', closeMediaManagerModal);
+        document.getElementById('quickMediaInput').addEventListener('change', async (e) => {
+          const files = e.target.files;
+          if (!files || files.length === 0 || !activeMediaRecordId) return;
+          const rec = records.find(r => r.id === activeMediaRecordId);
+          if (!rec) return;
+          showToast('ফাইল সেভ হচ্ছে...', '⏳');
+          const added = await processUploadedFiles(files);
+          if (!Array.isArray(rec.attachments)) rec.attachments = [];
+          rec.attachments.push(...added);
+          e.target.value = '';
+          saveRecords();
+          renderMediaModalGrid();
+          renderRecords();
+          showToast(`${toBanglaNumber(added.length)} টি ফাইল যুক্ত হয়েছে!`, '📎');
+        });
+
+        document.getElementById('quickAddLinkBtn').addEventListener('click', () => {
+          const urlInput = document.getElementById('quickExternalLink');
+          const url = urlInput.value.trim();
+          if (!url || !activeMediaRecordId) return;
+          const rec = records.find(r => r.id === activeMediaRecordId);
+          if (!rec) return;
+          if (!Array.isArray(rec.attachments)) rec.attachments = [];
+          rec.attachments.push({
+            id: 'link-' + Date.now(),
+            name: url.replace(/^https?:\/\//, '').slice(0, 38),
+            kind: 'link',
+            url
+          });
+          urlInput.value = '';
+          saveRecords();
+          renderMediaModalGrid();
+          renderRecords();
+          showToast('লিংক যুক্ত হয়েছে!', '🔗');
+        });
+
+        document.getElementById('mediaModalGrid').addEventListener('click', async (e) => {
+          const previewBtn = e.target.closest('.modal-preview-btn');
+          if (previewBtn && activeMediaRecordId) {
+            openFileViewer(activeMediaRecordId, previewBtn.getAttribute('data-modal-preview'));
+            return;
+          }
+
+          const delBtn = e.target.closest('.modal-del-att-btn');
+          if (delBtn && activeMediaRecordId) {
+            const idx = Number(delBtn.getAttribute('data-modal-del-att'));
+            const rec = records.find(r => r.id === activeMediaRecordId);
+            if (rec && Array.isArray(rec.attachments) && rec.attachments[idx]) {
+              const removed = rec.attachments.splice(idx, 1)[0];
+              if (removed && removed.id) {
+                await deleteAttachmentBlobFromDB(removed.id);
+              }
+              saveRecords();
+              renderMediaModalGrid();
+              renderRecords();
+              showToast('ফাইলটি মুছে ফেলা হয়েছে', '🗑️');
+            }
+          }
+        });
+
+        // Close Fullscreen File Viewer
+        document.getElementById('closeViewerModalBtn').addEventListener('click', closeFileViewer);
+
+        // Role Tabs
+        document.getElementById('recordTypeTabs').addEventListener('click', (e) => {
+          const btn = e.target.closest('.role-tab');
+          if (!btn) return;
+          matchSourceRecord = null;
+          filterRole = btn.getAttribute('data-role');
+          syncFilterUI();
+          renderRecords();
+        });
+
+        // Category Pills
+        document.getElementById('categoryPills').addEventListener('click', (e) => {
+          const btn = e.target.closest('.cat-pill');
+          if (!btn) return;
+          matchSourceRecord = null;
+          filterCategory = btn.getAttribute('data-cat');
+          syncFilterUI();
+          renderRecords();
+        });
+
+        // Stats Bar Quick Status Click
+        document.getElementById('statsBar').addEventListener('click', (e) => {
+          const btn = e.target.closest('.stat-filter-btn');
+          if (!btn) return;
+          matchSourceRecord = null;
+          const st = btn.getAttribute('data-stat-status');
+          filterStatus = (filterStatus === st && st !== 'all') ? 'all' : st;
+          syncFilterUI();
+          renderRecords();
+        });
+
+        // Status Dropdown
+        document.getElementById('statusFilterSelect').addEventListener('change', (e) => {
+          matchSourceRecord = null;
+          filterStatus = e.target.value;
+          renderRecords();
+        });
+
+        // Search Input
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        searchInput.addEventListener('input', (e) => {
+          matchSourceRecord = null;
+          searchQuery = e.target.value;
+          clearSearchBtn.classList.toggle('hidden', searchQuery.trim() === '');
+          renderRecords();
+        });
+        clearSearchBtn.addEventListener('click', () => {
+          searchQuery = '';
+          searchInput.value = '';
+          clearSearchBtn.classList.add('hidden');
+          renderRecords();
+        });
+
+        // Reset Filters
+        document.getElementById('resetFiltersBtn').addEventListener('click', resetAllFilters);
+        document.getElementById('emptyResetBtn').addEventListener('click', resetAllFilters);
+        document.getElementById('exitMatchBtn').addEventListener('click', () => {
+          matchSourceRecord = null;
+          renderRecords();
+        });
+
+        // Delegated Actions on Cards Grid
+        const grid = document.getElementById('recordsGrid');
+        grid.addEventListener('change', (e) => {
+          const select = e.target.closest('.quick-status-select');
+          if (!select) return;
+          const id = select.getAttribute('data-status-id');
+          const newStatus = select.value;
+          const rec = records.find(r => r.id === id);
+          if (rec) {
+            rec.status = newStatus;
+            if (!Array.isArray(rec.logs)) rec.logs = [];
+            rec.logs.push({
+              date: getBanglaTodayString(),
+              text: `স্ট্যাটাস পরিবর্তন করে "${newStatus}" করা হয়েছে।`
+            });
+            saveRecords();
+            renderRecords();
+            showToast(`স্ট্যাটাস "${newStatus}" করা হয়েছে!`, '📌');
+          }
+        });
+
+        grid.addEventListener('click', (e) => {
+          // Preview Attachment directly from Card
+          const previewBtn = e.target.closest('.preview-att-btn');
+          if (previewBtn) {
+            openFileViewer(previewBtn.getAttribute('data-view-rec'), previewBtn.getAttribute('data-view-att'));
+            return;
+          }
+
+          // Open Media & Files Manager Modal
+          const mediaBtn = e.target.closest('.open-media-btn');
+          if (mediaBtn) {
+            openMediaManagerModal(mediaBtn.getAttribute('data-media-id'));
+            return;
+          }
+
+          // Copy Phone
+          const copyBtn = e.target.closest('.copy-phone-btn');
+          if (copyBtn) {
+            copyTextToClipboard(copyBtn.getAttribute('data-copy-phone'));
+            return;
+          }
+
+          // Open Log Diary
+          const logBtn = e.target.closest('.open-log-btn');
+          if (logBtn) {
+            openLogModal(logBtn.getAttribute('data-log-id'));
+            return;
+          }
+
+          // Smart Match
+          const matchBtn = e.target.closest('.find-match-btn');
+          if (matchBtn) {
+            const id = matchBtn.getAttribute('data-match-id');
+            const rec = records.find(r => r.id === id);
+            if (rec) {
+              matchSourceRecord = rec;
+              renderRecords();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            return;
+          }
+
+          // Edit Record
+          const editBtn = e.target.closest('.edit-record-btn');
+          if (editBtn) {
+            const id = editBtn.getAttribute('data-edit-id');
+            const rec = records.find(r => r.id === id);
+            if (rec) openEntryModal(rec.role, rec);
+            return;
+          }
+
+          // Delete Record
+          const delBtn = e.target.closest('.delete-record-btn');
+          if (delBtn) {
+            const id = delBtn.getAttribute('data-delete-id');
+            const rec = records.find(r => r.id === id);
+            if (rec) {
+              pendingDeleteId = id;
+              document.getElementById('deleteTargetName').textContent = `${rec.title || rec.area} (${rec.personName})`;
+              const delModal = document.getElementById('deleteModal');
+              delModal.classList.remove('hidden');
+              delModal.classList.add('flex');
+            }
+          }
+        });
+
+        // Follow-up Log Modal Events
+        document.getElementById('closeLogModalBtn').addEventListener('click', closeLogModal);
+        document.getElementById('addLogForm').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const text = document.getElementById('newLogText').value.trim();
+          if (!text || !activeLogRecordId) return;
+          const rec = records.find(r => r.id === activeLogRecordId);
+          if (rec) {
+            if (!Array.isArray(rec.logs)) rec.logs = [];
+            rec.logs.push({
+              date: getBanglaTodayString(),
+              text
+            });
+            document.getElementById('newLogText').value = '';
+            saveRecords();
+            renderLogTimeline();
+            renderRecords();
+            showToast('ডায়েরিতে নতুন নোট যোগ হয়েছে!', '📓');
+          }
+        });
+
+        document.getElementById('logTimelineList').addEventListener('click', (e) => {
+          const btn = e.target.closest('.del-log-item-btn');
+          if (!btn || !activeLogRecordId) return;
+          const idx = Number(btn.getAttribute('data-del-log'));
+          const rec = records.find(r => r.id === activeLogRecordId);
+          if (rec && Array.isArray(rec.logs)) {
+            rec.logs.splice(idx, 1);
+            saveRecords();
+            renderLogTimeline();
+            renderRecords();
+          }
+        });
+
+        // Delete Confirmation Events
+        document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+          pendingDeleteId = null;
+          const delModal = document.getElementById('deleteModal');
+          delModal.classList.add('hidden');
+          delModal.classList.remove('flex');
+        });
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+          if (pendingDeleteId) {
+            records = records.filter(r => r.id !== pendingDeleteId);
+            pendingDeleteId = null;
+            saveRecords();
+            renderRecords();
+            showToast('হিসাবটি মুছে ফেলা হয়েছে', '🗑️');
+          }
+          const delModal = document.getElementById('deleteModal');
+          delModal.classList.add('hidden');
+          delModal.classList.remove('flex');
+        });
+
+
+      }
+
+      // Initialize App
+      async function bootstrap() {
+        initFontMode();
+        await loadAllBlobsIntoCache();
+        loadRecords();
+        bindEvents();
+        renderRecords();
+      }
+      bootstrap();
+    })();
+  </script>
+</body>
+</html>
